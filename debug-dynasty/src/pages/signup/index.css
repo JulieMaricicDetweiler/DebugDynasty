@@ -1,0 +1,22 @@
+
+body{
+	margin: 20px;
+	background-color: #dfdfdf;
+}
+
+
+.horriblebutton {
+	background-color: #61cb8a;
+	border: none;
+	color: white;
+	padding: 4px 12px;
+	font-size: 32px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border-radius: 12px;
+	transition: background-color 250ms ease;
+}
+
+.horriblebutton:hover {
+	background-color: #860000;
+}
