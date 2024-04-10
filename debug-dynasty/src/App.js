@@ -3,11 +3,13 @@ import Dashboard from './pages/dashboard';
 import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
+import Navbar from './components/navbar';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
