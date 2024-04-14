@@ -1,0 +1,33 @@
+a {
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--color-white);
+    text-decoration: none;
+    margin-right: 1rem;
+}
+
+a:hover {
+    color: white;
+}
+
+a.btn {
+    border-radius: 5px;
+    margin-left: 3rem;
+    font-weight: 500;
+    padding: 25px 40px;
+}
+
+a.btn-dark {
+   border: 2px solid;
+   background: transparent;
+}
+
+a.btn-green {
+    border: 2px solid transparent;
+    background: rgb(73, 146, 112);
+    color: white;
+}
+
+a.btn-green:hover {
+    color: black;
+}

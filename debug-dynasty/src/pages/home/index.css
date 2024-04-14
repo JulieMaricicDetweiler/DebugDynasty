@@ -1,0 +1,49 @@
+#header {
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.header-container h1 {
+    font-size: 4rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--color-white);
+    position: relative;
+    padding-bottom: 2rem;
+    width: 60%;
+}
+
+.header-container h1 span {
+    margin: 3rem;
+    display: block;
+    font-size: 10rem;
+}
+
+h1 span:nth-child(1) {
+    font-weight: 1000;
+}
+
+h1 span:nth-child(2) {
+    font-weight: 100;
+}
+
+.header-container h1::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 70%;
+    height: 1px;
+    background: var(--color-white);
+}
+
+.header-container p {
+    margin: 3rem;
+    width: 70%;
+}
+  
