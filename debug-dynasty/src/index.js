@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import "./index.css";
 
-/*
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
@@ -12,6 +12,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-*/
-
-ReactDOM.render(<App />, document.getElementById('root'));
