@@ -7,7 +7,8 @@
   --light-green: #1fffa9;
 
   --color-white: #adffbf;
-  --dark-text: #ffffff;
+  --light-text: #ffffff;
+  --dark-text: #000000;
   --form-button: #2da5ff;
   --color-grey: #25794f;
   --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -49,7 +50,7 @@ section {
   color: var(--dark-text);
 }
 .u-text-light {
-  color: var(--dark-text);
+  color: var(--light-text);
 }
 
 .u-text-center {
