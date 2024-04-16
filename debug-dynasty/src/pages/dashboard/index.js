@@ -1,4 +1,25 @@
+import * as React from 'react';
+import firebaseConfig from "../../firebase/firebaseConfig";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../components/authContext/authContext";
+
+
 const Dashboard = () => {
+
+    const [authUser, setAuthUser] = React.useState(null);
+    const { currentUser } = React.useContext(AuthContext);
+    const navigate = useNavigate;
+
+    const handleSignOut = () => {
+        firebaseConfig.auth.signOut(firebaseConfig.auth).then(() => {
+          console.log("Sign out successful");
+          setAuthUser(null);
+        }).catch((error) => {
+          console.log("Error signing out");
+        });
+      }
+
     return (
         <div className="dashboard-container">
             <h1 style={{textAlign: "center", fontFamily: "sans-serif"}}>Dashboard</h1>
@@ -30,6 +51,14 @@ const Dashboard = () => {
                 <button>Go</button>
                 <button>Cancel</button>
             </div>
+
+            {currentUser ? 
+                <div>
+                    <button onClick={handleSignOut}>Sign Out</button>
+                </div>
+            :
+                <></>
+            }
         </div>
     )
 }

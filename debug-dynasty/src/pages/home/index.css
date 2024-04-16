@@ -1,9 +1,12 @@
 #home {
     position: relative;
+    padding-top: 0px;
+    /*display: flex;
+    align-items: flex-start;*/
 }
 
 .header-container {
-    padding-top: 50px;
+    padding-top: 0px;
     padding-bottom: 50px;
     padding-left: 25px;
     padding-right: 25px;
@@ -45,6 +48,12 @@ h1 span:nth-child(2) {
 .header-container p {
     margin: 3rem;
     width: 70%;
+    margin-left: 0;
+}
+
+.btn-green, .btn-dark {
+    margin-top: 20px;
+    margin-left: 0;
 }
 
 .description-container {

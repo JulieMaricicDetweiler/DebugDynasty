@@ -17,6 +17,11 @@
     background: linear-gradient(180deg, #43ff8e, #1e774b);
 }
 
+.login-form {
+    padding: 40px;
+    border: #1e774b;
+}
+
 h1 {
     font-size: 4rem;
     color: darkgreen;

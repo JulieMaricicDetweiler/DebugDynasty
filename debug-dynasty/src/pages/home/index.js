@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import Button from "../UI-Button/Button.js";
+import Button from "../../components/UI-Button/Button.js";
 
 const Home = () => {
     const headerBugURL = process.env.PUBLIC_URL + '/header-bug.jpg';
