@@ -9,7 +9,7 @@ const Home = () => {
     const githubLogoURL = process.env.PUBLIC_URL + '/github-logo.jpg';
 
     return (
-        <section id="home" className="header-bg">
+        <div id="home" className="header-bg">
             <div className="header-container" style={{
             backgroundImage: `linear-gradient(rgba(0, 50, 20, 0.8), rgba(0, 50, 20, 0.8)), url(${headerBugURL})`,
             backgroundSize: 'cover',
@@ -61,7 +61,7 @@ const Home = () => {
             <footer>
                 &copy; Copyright. DebugDynasty Group 13 CIS4930
             </footer>
-        </section>
+        </div>
     )
 }
 

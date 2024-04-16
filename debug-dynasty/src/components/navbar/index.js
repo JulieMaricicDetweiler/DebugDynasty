@@ -38,7 +38,7 @@ function Navbar() {
                 <Container maxWidth="m" sx={{ display: "flex", alignItems: "center", justifyContent: "end"}}>
                     <Toolbar disableGutters sx={{ display: "flex", justifyContent: "space-between",  alignItems: "center", columnGap: "2em" }}>
                         {!isMobile && (
-                        <Link to="/about" style={{ textDecoration: "none" }}>
+                        <Link to="/" style={{ textDecoration: "none" }}>
                             <Button size="large" style={{ fontFamily: "helvetica", fontWeight: "bold", color: "black" }}>
                                 About
                             </Button>

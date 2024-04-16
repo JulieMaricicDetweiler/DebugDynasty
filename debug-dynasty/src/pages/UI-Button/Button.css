@@ -7,14 +7,14 @@ a {
 }
 
 a:hover {
-    color: white;
+    color: rgb(67, 192, 105);
 }
 
 a.btn {
     border-radius: 5px;
-    margin-left: 3rem;
+    margin-left: 0.5rem;
     font-weight: 500;
-    padding: 25px 40px;
+    padding: 5px 10px;
 }
 
 a.btn-dark {
