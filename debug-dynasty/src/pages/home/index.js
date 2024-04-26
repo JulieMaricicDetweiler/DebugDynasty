@@ -9,7 +9,7 @@ const Home = () => {
     const githubLogoURL = process.env.PUBLIC_URL + '/github-logo.jpg';
 
     return (
-        <div id="home" className="header-bg">
+        <div id="home" className="header-bg" style={{marginTop: '90px'}}>
             <div className="header-container" style={{
             backgroundImage: `linear-gradient(rgba(0, 50, 20, 0.8), rgba(0, 50, 20, 0.8)), url(${headerBugURL})`,
             backgroundSize: 'cover',
@@ -22,7 +22,7 @@ const Home = () => {
                     Our solution provides an automated process for efficiently tracking application issues, freeing up valuable time and resources.</p>
                 <div className="header-buttons">
                     <Button text={"Get Started"} btnClass={"btn-dark"} href={"#"} />
-                    <Button text={"How It Works"} btnClass={"btn-green"} href={"#faq"} />
+                    <Button text={"How It Works"} btnClass={"btn-green"} href={"/about"} />
                 </div>
             </div>
             <div className="description-container">

@@ -53,7 +53,7 @@ const Signup = () => {
     };
 
     return (
-        <div className="signup-container">
+        <div className="signup-container" style={{paddingTop: '90px'}}>
         <form onSubmit={handleSubmit}>
             <h1>Sign Up</h1>
             <hr />
