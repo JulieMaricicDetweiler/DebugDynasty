@@ -9,6 +9,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add new item
+import "./index.css";
 
 const Dashboard = () => {
     const { currentUser } = React.useContext(AuthContext);
@@ -55,13 +56,24 @@ const Dashboard = () => {
         }
     };
 
+    const toggleSelectAll = () => {
+        if (selectedIssues.length === issues.length) {
+            setSelectedIssues([]); // If all issues are already selected, clear the selection
+        } else {
+            setSelectedIssues(issues.map(issue => issue.id)); // Otherwise, select all issues
+        }
+    };
+
     return (
         <div>
             {currentUser ?  //checks if a user is logged in
                 <Box className="dashboard-container" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
                     <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
                         <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal'}}>Issues Dashboard</h1>
-                        <EditNoteIcon  cursor='pointer' style={{marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: '#006400'}} onClick={toggleEditMode}/>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
+                            <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: '#006400' }} onClick={toggleEditMode}/>
+                        </div>
                     </Box>
 
                     { //display dashboard issues
@@ -71,14 +83,12 @@ const Dashboard = () => {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}}>
+                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}} onClick={() => toggleIssueSelection(issue.id)}>
                                     {selectedIssues.includes(issue.id) ?                                         
                                         editMode && <CheckCircle
-                                        onClick={() => toggleIssueSelection(issue.id)} 
                                         style={{ marginRight: '20px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
                                     />:
                                         editMode && <CheckCircleOutlineIcon 
-                                        onClick={() => toggleIssueSelection(issue.id)} 
                                         style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}} 
                                     />  
                                     }
@@ -86,14 +96,16 @@ const Dashboard = () => {
                                     <ExpandMoreIcon style= {{fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle'}}/>
                                 </Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography variant="body2" style={{fontSize: 'large'}}>
-                                    <strong>Tags:</strong> {issue.details.tags.join(", ")}
-                                </Typography>
-                                <Typography variant="body2" style={{fontSize: 'large'}}>
-                                    <strong>Assignee:</strong> {issue.details.assignee}
-                                </Typography>
-                            </AccordionDetails>
+                            {!editMode && (
+                                <AccordionDetails>
+                                    <Typography variant="body2" style={{fontSize: 'large'}}>
+                                        <strong>Tags:</strong> {issue.details.tags.join(", ")}
+                                    </Typography>
+                                    <Typography variant="body2" style={{fontSize: 'large'}}>
+                                        <strong>Assignee:</strong> {issue.details.assignee}
+                                    </Typography>
+                                </AccordionDetails>
+                            )}
                         </Accordion>
                     ))}
                     <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
@@ -117,8 +129,8 @@ const Dashboard = () => {
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
-                            Idk
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }} onClick={toggleSelectAll}>
+                            Select All
                             </Button>
                         </Grid>
                         </Grid>
