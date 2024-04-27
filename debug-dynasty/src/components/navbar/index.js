@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import { Toolbar, Typography, SvgIcon, hexToRgb } from '@mui/material';
 import { ReactComponent as MainLogo } from '../../assets/logo-final.svg';
 import { Link, useNavigate } from 'react-router-dom';
-import { signOut } from "firebase/auth";
 import { AuthContext } from '../authContext/authContext';
 import firebaseConfig from '../../firebase/firebaseConfig';
 
