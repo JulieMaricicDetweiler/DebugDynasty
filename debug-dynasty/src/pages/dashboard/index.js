@@ -1,15 +1,19 @@
 import * as React from 'react';
 import firebaseConfig from "../../firebase/firebaseConfig";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../components/authContext/authContext";
-import {Typography, Link, Box, Accordion, AccordionSummary, AccordionDetails} from '@mui/material';
-
+import {Typography, Link, Box, Accordion, AccordionSummary, AccordionDetails, Button, Grid} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteIcon from '@mui/icons-material/Delete';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add new item
 
 const Dashboard = () => {
-
-    const [authUser, setAuthUser] = React.useState(null);
     const { currentUser } = React.useContext(AuthContext);
-    const navigate = useNavigate;
+    const [editMode, setEditMode] = React.useState(false);
+    const [selectedIssues, setSelectedIssues] = React.useState([]);
     //temporary dummy data
     const issues = [
         {
@@ -38,18 +42,49 @@ const Dashboard = () => {
         }
     ];
 
+    const toggleEditMode = () => {
+        setEditMode(!editMode);
+        setSelectedIssues([]);
+    };
+
+    const toggleIssueSelection = (issueId) => {
+        if (selectedIssues.includes(issueId)) {
+            setSelectedIssues(selectedIssues.filter(id => id !== issueId));
+        } else {
+            setSelectedIssues([...selectedIssues, issueId]);
+        }
+    };
+
     return (
-        <div >
-            {currentUser ? 
+        <div>
+            {currentUser ?  //checks if a user is logged in
                 <Box className="dashboard-container" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
-                    <h1 style={{ textAlign: "center", fontFamily: "Poppins", paddingBottom: '50px' }}>Issues Dashboard</h1>
-                    {issues.map((issue) => (
-                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: '#b6d4b8'}}>
+                    <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
+                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal'}}>Issues Dashboard</h1>
+                        <EditNoteIcon  cursor='pointer' style={{marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: '#006400'}} onClick={toggleEditMode}/>
+                    </Box>
+
+                    { //display dashboard issues
+                    issues.map((issue) => (
+                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? '#aaffaa' : '#b6d4b8'}}>
                             <AccordionSummary
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                <Typography style={{fontSize: 'large'}}>{issue.id} - {issue.description}</Typography>
+                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}}>
+                                    {selectedIssues.includes(issue.id) ?                                         
+                                        editMode && <CheckCircle
+                                        onClick={() => toggleIssueSelection(issue.id)} 
+                                        style={{ marginRight: '20px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
+                                    />:
+                                        editMode && <CheckCircleOutlineIcon 
+                                        onClick={() => toggleIssueSelection(issue.id)} 
+                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}} 
+                                    />  
+                                    }
+                                    {issue.id} - {issue.description}
+                                    <ExpandMoreIcon style= {{fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle'}}/>
+                                </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography variant="body2" style={{fontSize: 'large'}}>
@@ -61,8 +96,37 @@ const Dashboard = () => {
                             </AccordionDetails>
                         </Accordion>
                     ))}
+                    <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
+                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px' }}/>
+                    </Box>
+
+                    {//button options when in edit mode
+                    editMode &&
+                    <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
+                        <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '70%' }}>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
+                            <DeleteIcon style={{ marginRight: '12px', fontSize: '25px' }} />
+                            Delete
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
+                            <GitHubIcon style={{ marginRight: '12px', fontSize: '25px' }} />
+                            GitHub
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
+                            Idk
+                            </Button>
+                        </Grid>
+                        </Grid>
+                    </Box>
+                    }
                 </Box>
-            :
+
+            : //when user is not logged in, do not render any details, only login message
             <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
                 <Typography sx={{
                     textAlign: 'center',
