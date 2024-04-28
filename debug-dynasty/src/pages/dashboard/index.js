@@ -9,12 +9,16 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add new item
+import AddIssue from '../../components/AddIssue/AddIssue';
+import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
 import "./index.css";
 
 const Dashboard = () => {
     const { currentUser } = React.useContext(AuthContext);
     const [editMode, setEditMode] = React.useState(false);
     const [selectedIssues, setSelectedIssues] = React.useState([]);
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+
     //temporary dummy data
     const issues = [
         {
@@ -64,6 +68,10 @@ const Dashboard = () => {
         }
     };
 
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
+
     return (
         <div>
             {currentUser ?  //checks if a user is logged in
@@ -111,7 +119,9 @@ const Dashboard = () => {
                         </Accordion>
                     ))}
                     <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
-                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px' }}/>
+                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px' }} onClick={toggleModal} />
+                        {/*Add Issues modal*/}
+                        <AddIssue isOpen={isModalOpen} onClose={toggleModal} />
                     </Box>
 
                     {//button options when in edit mode
@@ -125,10 +135,11 @@ const Dashboard = () => {
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }} onClick={toggleModal}>
                             <GitHubIcon style={{ marginRight: '12px', fontSize: '25px' }} />
                             GitHub
                             </Button>
+                            <GitHubAuth isOpen={isModalOpen} onClose={toggleModal} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }} onClick={toggleSelectAll}>
