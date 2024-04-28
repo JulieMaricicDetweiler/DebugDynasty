@@ -78,15 +78,17 @@ const Dashboard = () => {
 
                     { //display dashboard issues
                     issues.map((issue) => (
-                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? '#aaffaa' : '#b6d4b8'}}>
+                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? '#aaffaa' : '#b6d4b8'}} disableGutters>
                             <AccordionSummary
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => toggleIssueSelection(issue.id)}
                             >
-                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}} onClick={() => toggleIssueSelection(issue.id)}>
+                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}}>
                                     {selectedIssues.includes(issue.id) ?                                         
                                         editMode && <CheckCircle
-                                        style={{ marginRight: '20px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
+                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
                                     />:
                                         editMode && <CheckCircleOutlineIcon 
                                         style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}} 
