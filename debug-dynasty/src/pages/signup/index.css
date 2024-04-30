@@ -1,3 +1,5 @@
+@import url('../../colors.css');
+
 body{
 	margin: 20px;
 	background-color: #dfdfdf;
@@ -11,10 +13,21 @@ body{
 	font-size: 32px;
 	margin: 4px 2px;
 	cursor: pointer;
-	border-radius: 12px;
+	border-radius: 4px;
 	transition: background-color 250ms ease;
 }
 
-.horriblebutton:hover {
-	background-color: #860000;
+a {
+	color: var(--dark-green);
+	text-decoration: underline;
+	font-size: medium;
+}
+
+p {
+	font-size: medium;
+	color: var(--dark-green);
+}
+
+.login-link {
+	margin-top: 15px;
 }

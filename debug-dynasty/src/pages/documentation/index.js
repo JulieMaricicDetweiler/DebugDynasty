@@ -6,13 +6,13 @@ const Documentation = () => {
 
     return (
         <Box className="docs-main-box" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
-            <Typography style={{fontSize: '50px', fontFamily:'Poppins', color: '#006400', textAlign: 'center'}}>
+            <Typography style={{fontSize: '50px', fontFamily:'Poppins', color: 'var(--med-green)', textAlign: 'center'}}>
                 API Documentation
             </Typography>
             <hr maxWidth='40%'></hr>
             <Box className="docs-description-box" paddingTop={'30px'}>
                 <Box className='docs-overview'>
-                    <Typography style={{fontSize: '30px', fontFamily:'Poppins', color: '#006400', textAlign: 'left'}}>
+                    <Typography style={{fontSize: '30px', fontFamily:'Poppins', color: 'var(--med-green)', textAlign: 'left'}}>
                         Overview
                     </Typography>
                     <Typography style={{fontSize: '20px', fontFamily:'Poppins', textAlign: 'left', paddingTop: '20px'}}>

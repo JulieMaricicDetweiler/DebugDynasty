@@ -51,27 +51,37 @@ function Navbar() {
 
                 <Container maxWidth="m" sx={{ display: "flex", alignItems: "center", justifyContent: "end"}}>
                     <Toolbar disableGutters sx={{ display: "flex", justifyContent: "space-between",  alignItems: "center", columnGap: "2em" }}>
+
+                    {!isMobile &&
+                    (
+                    <Link to="/register" style={{ textDecoration: "none" }}>
+                        <Button size="large" style={{ fontFamily: "helvetica", fontSize: 'large', color: "black" }}>
+                            Register Project
+                        </Button>
+                    </Link>
+                    )
+                    }
+
                         {!isMobile && (
                         <Link to="/docs" style={{ textDecoration: "none" }}>
                             <Button size="large" style={{ fontFamily: "helvetica", color: "black", fontSize: 'large' }}>
                                 Docs
                             </Button>
                         </Link>)}
-
-                        {!isMobile && 
-                        (<Link to="/dashboard" style={{ textDecoration: "none" }}>
+                     
+                        <Link to="/dashboard" style={{ textDecoration: "none" }}>
                             <Button size="large" style={{ fontFamily: "helvetica", fontSize: 'large', color: "black" }}>
                                 Dashboard
                             </Button>
-                        </Link>)}
+                        </Link>
                         
                         {currentUser ?
-                            <Button size="large" onClick={handleSignOut} style={{ fontFamily: "helvetica", fontSize: 'large', backgroundColor: hexToRgb("#155426"), borderRadius: 0 }} variant="contained">
+                            <Button size="large" onClick={handleSignOut} style={{ fontFamily: "helvetica", fontSize: 'large', backgroundColor: hexToRgb("#155426"), borderRadius: 3 }} variant="contained">
                                 Sign Out
                             </Button>
                             :
                             <Link to="/login" style={{ textDecoration: "none" }}>
-                                <Button size="large" style={{ fontFamily: "helvetica", fontSize: 'large', backgroundColor: hexToRgb("#155426"), borderRadius: 0 }} variant="contained">
+                                <Button size="large" style={{ fontFamily: "helvetica", fontSize: 'large', backgroundColor: hexToRgb("#155426"), borderRadius: 3 }} variant="contained">
                                     Login
                                 </Button>
                             </Link>

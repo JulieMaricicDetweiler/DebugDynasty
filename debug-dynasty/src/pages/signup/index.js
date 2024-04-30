@@ -77,8 +77,8 @@ const Signup = () => {
                 <h3>Confirm Password</h3>
                 <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
             </div>
-            <button type="submit" className="horriblebutton">Register</button>
-            <div className="register-link">
+            <button type="submit" className="horriblebutton">Sign Up</button>
+            <div className="login-link">
                 <p>Already have an account? <a href="/login">Log In</a></p>
             </div>
         </form>

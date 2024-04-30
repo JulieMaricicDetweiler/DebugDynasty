@@ -1,3 +1,11 @@
+@import url("../../colors.css");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+    font-family: 'Poppins', sans-serif;
+}
+
+
 .login-container {
     display: flex;
     height: 100vh;
@@ -14,7 +22,7 @@
 
 .login-container-right {
     flex: 1;
-    background: linear-gradient(180deg, #43ff8e, #1e774b);
+    background: linear-gradient(180deg, var(--light-green), var(--dark-green));
 }
 
 .login-form {
@@ -24,12 +32,12 @@
 
 h1 {
     font-size: 4rem;
-    color: darkgreen;
+    color: var(--dark-green);
 }
 
 h3 {
     font-size: 1.75rem;
-    color: #009e4f
+    color: var(--subheading)
 }
 
 hr {
@@ -48,23 +56,46 @@ hr {
 }
 
 .input-box input::placeholder {
-    color: #49a376;
+    color: var(--placeholder-text);
 }
 
 .keep-forgot {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
 }
 
-.register-link {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
 
 label {
     font-size: 1.5rem;
+}
+
+button.horriblebutton {
+    background-color: var(--dark-green);
+    font-family: 'Poppins';
+    font-size: x-large;
+}
+
+button.horriblebutton:hover {
+    background-color: var(--med-green);
+}
+
+.i-forgor {
+    color: var(--med-green);
+    text-decoration: underline; 
+    align-self: flex-start;
+    font-family: 'Poppins';
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.register {
+    color: var(--med-green);
+    text-decoration: underline;
+    margin-left: 10px;
+}
+
+label {
+    font-family: 'Poppins';
+    color: var(--med-green)
 }
