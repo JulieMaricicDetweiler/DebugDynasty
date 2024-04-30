@@ -12,6 +12,7 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add
 import AddIssue from '../../components/AddIssue/AddIssue';
 import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
 import "./index.css";
+import "../../colors.css"
 
 const Dashboard = () => {
     const { currentUser } = React.useContext(AuthContext);
@@ -82,16 +83,16 @@ const Dashboard = () => {
             {currentUser ?  //checks if a user is logged in
                 <Box className="dashboard-container" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
                     <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
-                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal'}}>Issues Dashboard</h1>
+                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
-                            <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: '#006400' }} onClick={toggleEditMode}/>
+                            <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
                         </div>
                     </Box>
 
                     { //display dashboard issues
                     issues.map((issue) => (
-                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? '#aaffaa' : '#b6d4b8'}} disableGutters>
+                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? 'var(--selected-accordion)' : 'var(--accordion)'}} disableGutters>
                             <AccordionSummary
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
@@ -124,7 +125,7 @@ const Dashboard = () => {
                         </Accordion>
                     ))}
                     <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
-                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px' }} onClick={toggleAddIssueModal} />
+                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px', color: "var(--black-green)"}} onClick={toggleAddIssueModal} />
                         {/*Add Issues modal*/}
                         <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} />
                     </Box>
@@ -132,22 +133,22 @@ const Dashboard = () => {
                     {//button options when in edit mode
                     editMode &&
                     <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
-                        <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '70%' }}>
+                        <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }}>
                             <DeleteIcon style={{ marginRight: '12px', fontSize: '25px' }} />
                             Delete
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }} onClick={toggleGitHubAuthModal}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }} onClick={toggleGitHubAuthModal}>
                             <GitHubIcon style={{ marginRight: '12px', fontSize: '25px' }} />
                             GitHub
                             </Button>
                             <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: "#BABABA", borderRadius: '0px' }} onClick={toggleSelectAll}>
+                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }} onClick={toggleSelectAll}>
                             Select All
                             </Button>
                         </Grid>
@@ -168,11 +169,13 @@ const Dashboard = () => {
                     textAlign: 'center',
                     fontSize: 'x-large',
                     textDecoration: 'none',
-                    padding: '15px',
-                    backgroundColor: '#155426',
+                    padding: '10px 15px 10px 15px',
+                    backgroundColor: "var(--dark-green)",
                     color: 'white',
                     marginTop: '30px',
-                    display: 'block' 
+                    display: 'block',
+                    borderRadius: 1
+                
                 }}>
                     Log in
                 </Link>

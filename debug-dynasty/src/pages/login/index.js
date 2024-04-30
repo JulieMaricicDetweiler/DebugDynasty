@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './index.css';
+import '../../colors.css';
 import Button from "../../components/UI-Button/Button.js";
 import { Link } from 'react-router-dom';
 import firebaseConfig from "../../firebase/firebaseConfig.js";
@@ -56,16 +57,17 @@ const Login = () => {
 
                     {loginFailed && <p className="error-message">Login failed. Please try again.</p>}
 
-                    <div className="keep-forgot">
-                        <label><input type="checkbox" />Keep me logged in</label>
-                        <Link to="/forgot-password" style={{ textDecoration: "none" }}>Forgot password?</Link>
-                    </div>
-
                     <button type="submit" className="horriblebutton">Login</button>
 
+                    <div className="keep-forgot" style={{ paddingTop: '15px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <label><input type="checkbox" />Keep me logged in</label>
+                        <Link className="i-forgor" to="/forgot-password" >Forgot password?</Link>
+                    </div>
+
+
                     <div className="register-link">
-                        <label>Don't have an account?</label>
-                        <Link to="/signup" style={{ textDecoration: "none" }}>
+                        <label >Don't have an account?</label>
+                        <Link className="register" to="/signup">
                             Register
                         </Link>
                     </div>
