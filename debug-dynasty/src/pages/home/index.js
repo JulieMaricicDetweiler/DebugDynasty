@@ -22,7 +22,7 @@ const Home = () => {
                     Our solution provides an automated process for efficiently tracking application issues, freeing up valuable time and resources.</p>
                 <div className="header-buttons">
                     <Button text={"Get Started"} btnClass={"btn-dark"} href={"#"} />
-                    <Button text={"How It Works"} btnClass={"btn-green"} href={"/about"} />
+                    <Button text={"How It Works"} btnClass={"btn-green"} href={"/docs"} />
                 </div>
             </div>
             <div className="description-container">
