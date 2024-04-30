@@ -52,9 +52,9 @@ function Navbar() {
                 <Container maxWidth="m" sx={{ display: "flex", alignItems: "center", justifyContent: "end"}}>
                     <Toolbar disableGutters sx={{ display: "flex", justifyContent: "space-between",  alignItems: "center", columnGap: "2em" }}>
                         {!isMobile && (
-                        <Link to="/" style={{ textDecoration: "none" }}>
+                        <Link to="/docs" style={{ textDecoration: "none" }}>
                             <Button size="large" style={{ fontFamily: "helvetica", color: "black", fontSize: 'large' }}>
-                                About
+                                Docs
                             </Button>
                         </Link>)}
 
