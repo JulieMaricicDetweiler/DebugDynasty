@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Box, Typography, TextField, Button, Snackbar } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
-import { getFirestore, doc, addDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, addDoc, collection, setDoc, getDoc } from 'firebase/firestore';
+import { AuthContext } from '../../components/authContext/authContext';
 import "../../colors.css";
 import"./index.css";
 
@@ -10,6 +11,8 @@ const Register = () => {
     const [projectName, setProjectName] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [docId, setDocId] = useState('');
+    const {currentUser} = React.useContext(AuthContext);
+    
 
     const handleProjectNameChange = (event) => {
         setProjectName(event.target.value);
@@ -23,6 +26,24 @@ const Register = () => {
             const docRef = await addDoc(collection(firebaseConfig.firestore, "projects"), {
                 name: projectName
             });
+            if (currentUser) {
+                // Fetch user details from the main users collection
+                const userRef = doc(firebaseConfig.firestore, "users", currentUser.uid);
+                const userSnap = await getDoc(userRef);
+    
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    const projectUsersRef = doc(docRef, "users", currentUser.uid);
+    
+                    // Set the user document in the project's users subcollection using the uid as the document ID
+                    await setDoc(projectUsersRef, {
+                        firstName: userData.firstName, // Assuming these fields exist in your main users collection
+                        lastName: userData.lastName
+                    });
+                } else {
+                    console.log("No such user!");
+                }
+            }
 
             setDocId(docRef.id); // save document ID for the token message
             setOpenSnackbar(true); // open snackbar and display token
@@ -71,19 +92,18 @@ const Register = () => {
                             fontFamily: 'Poppins, sans-serif',
                             padding: '8px',
                             color: 'white',
-                            backgroundColor: '#499270',
+                            backgroundColor: 'var(--dark-green)',
                             borderRadius: '4px',
                             transition: '0s',
-                          }}
-                          sx={{ mt: 2 }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--light-green)'; 
-                            e.currentTarget.style.color = 'black';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = '#499270';
+                        }}
+                        sx={{ mt: 2 }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--med-green)'; 
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--dark-green)';
                             e.currentTarget.style.color = 'white';
-                          }}>
+                        }}>
                     Register
                 </Button>
             </form>

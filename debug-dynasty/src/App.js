@@ -8,6 +8,7 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import Documentation from './pages/documentation';
 import Register from './pages/registerProject';
+import AddSelf from './pages/addToProject';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/docs" element={<Documentation />} />
         <Route path="/register" element={<Register/>}/>
+        <Route path="/addMe" element={<AddSelf/>} />
       </Routes>
     </Router>
   );
