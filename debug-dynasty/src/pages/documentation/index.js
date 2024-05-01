@@ -91,6 +91,26 @@ const Documentation = () => {
                         </pre>
                     </Typography>
                 </Box>
+                <Box paddingTop={'30px'}>
+                    <Typography variant="h5" style={{ color: 'var(--med-green)', fontSize: isMobile ? '24px' : '30px' }}>
+                        Testing Submission on Mock Project
+                    </Typography>
+                    <Typography style={{ paddingTop: '20px', fontSize: isMobile ? '16px' : '20px' }}>
+                        For testing convenience, we have set up a form on Julie's senior project live link in order to test
+                        our endpoint. Since the site is already deployed, there is no need to download any additional code.
+                        Simply follow the directions below to test.
+                    </Typography>
+                    <Typography style={{ paddingTop: '20px', fontSize: isMobile ? '16px' : '20px' }}>
+                        1. Create an account through the sign-up portal, using the following project key: <i>L3zYcBBKKEeT3FtkFlwN</i><br/>
+                        <br/>
+                        2. Visit the following link to access the submission form: <br/>
+                        <a href="https://sightbyte-b9325.web.app/testEndpoint" target="_blank" style={{fontSize: 'large'}}><i>https://sightbyte-b9325.web.app/testEndpoint</i></a><br/>
+                        <br/>
+                        3. Enter your desired information into the issue fields and submit <br/>
+                        <br/>
+                        4. If successful, you should be able to go back to the project dashboard and see your issue posted <br/>
+                    </Typography>
+                </Box>
             </Box>
         </Container>
     );
