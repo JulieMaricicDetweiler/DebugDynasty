@@ -48,7 +48,8 @@ const Signup = () => {
                 const projectName = projectSnap.data().name;
                 await setDoc(doc(firebaseConfig.firestore, `projects/${formData.projectToken}/users`, user.uid), {
                     firstName: formData.firstName,
-                    lastName: formData.lastName
+                    lastName: formData.lastName,
+                    email: formData.email
                 });
                 await setDoc(doc(firebaseConfig.firestore, `users/${user.uid}/projects`, formData.projectToken), {
                     projectToken: formData.projectToken,
