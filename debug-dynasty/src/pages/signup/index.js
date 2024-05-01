@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 import './index.css';
 
@@ -14,16 +14,51 @@ const Signup = () => {
         password: '',
         firstName: '',
         lastName: '',
+        projectToken: '',
         confirmPassword: ''
     });
 
     const navigate = useNavigate();
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
+    };
+
+    const registerUser = async (email, password) => {
+        return await createUserWithEmailAndPassword(firebaseConfig.auth, email, password);
+    };
+
+    const saveUserData = async (user) => {
+        await setDoc(doc(firebaseConfig.firestore, "users", user.uid), {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email
+        });
+    };
+
+    const linkUserToProject = async (user) => {
+        if (formData.projectToken) {
+            const projectRef = doc(firebaseConfig.firestore, "projects", formData.projectToken);
+            const projectSnap = await getDoc(projectRef);
+            if (projectSnap.exists()) {
+                const projectName = projectSnap.data().name;
+                await setDoc(doc(firebaseConfig.firestore, `projects/${formData.projectToken}/users`, user.uid), {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName
+                });
+                await setDoc(doc(firebaseConfig.firestore, `users/${user.uid}/projects`, formData.projectToken), {
+                    projectToken: formData.projectToken,
+                    projectName: projectName
+                });
+            } else {
+                console.log("Project not found with the provided token.");
+                alert("Project not found with the provided token.")
+            }
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -33,17 +68,11 @@ const Signup = () => {
             return;
         }
         try {
-            const userCredential = await createUserWithEmailAndPassword(
-                firebaseConfig.auth,
-                formData.email,
-                formData.password
-            );
+            const userCredential = await registerUser(formData.email, formData.password);
             const user = userCredential.user;
-            await setDoc(doc(firebaseConfig.firestore, "users", user.uid), {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email
-            });
+            await saveUserData(user);
+            await linkUserToProject(user);
+
             console.log("User registered and data saved.");
             navigate('/dashboard');
         } catch (error) {
@@ -64,6 +93,10 @@ const Signup = () => {
             <div className="input-box">
                 <h3>Last Name</h3>
                 <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+            </div>
+            <div className="input-box">
+                <h3>Project Token</h3>
+                <input type="text" name="projectToken" value={formData.projectToken} onChange={handleChange} />
             </div>
             <div className="input-box">
                 <h3>Email</h3>
