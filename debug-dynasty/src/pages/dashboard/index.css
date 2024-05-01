@@ -5,3 +5,23 @@
 	font-size: 20px;
 	cursor: pointer;
 }
+
+.btn-nice {
+    font-size: large;
+    font-family: "Poppins", sans-serif;
+	padding: 10px;
+	color: rgb(0, 0, 0);
+	background-color: var(--db-edit-buttons);
+	border-radius: 4px;
+    transition: 0s;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+  
+.btn-nice:hover {
+    color: rgb(255, 255, 255);
+    background-color: var(--color-grey);
+}

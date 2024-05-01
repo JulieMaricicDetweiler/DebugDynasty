@@ -31,3 +31,32 @@ a.btn-green {
 a.btn-green:hover {
     color: black;
 }
+
+
+.btn-reg {
+    font-size: medium;
+    font-family: "Poppins", sans-serif;
+    background: rgb(73, 146, 112);
+    margin-top: 20px;
+    margin-left: 0;
+    transition: 0s;
+}
+
+.btn-reg:hover{
+    color: black;
+    background-color: var(--light-green);
+}
+
+.btn-del {
+    color: white;
+    background-color: darkgreen;
+    font-size: 10px;
+    font-family: "Poppins", sans-serif;
+    margin-top: 20px;
+    margin-left: 0;
+}
+
+.btn-del:hover {
+    margin-top: 20px;
+    margin-left: 0;
+}

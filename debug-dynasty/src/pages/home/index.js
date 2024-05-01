@@ -21,7 +21,7 @@ const Home = () => {
                 <p className="u-text-small u-text-light">At DebugDynasty, we offer a sophisticated and user-friendly platform designed to streamline the management of bug reports and user feedback for software developers. 
                     Our solution provides an automated process for efficiently tracking application issues, freeing up valuable time and resources.</p>
                 <div className="header-buttons">
-                    <Button text={"Get Started"} btnClass={"btn-dark"} href={"#"} />
+                    <Button text={"Get Started"} btnClass={"btn-dark"} href={"/login"} />
                     <Button text={"How It Works"} btnClass={"btn-green"} href={"/docs"} />
                 </div>
             </div>

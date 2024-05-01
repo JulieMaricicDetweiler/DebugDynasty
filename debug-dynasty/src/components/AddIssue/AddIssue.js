@@ -35,6 +35,18 @@ const AddIssue = ({ isOpen, onClose }) => {
           onChange={(e) => setDescription(e.target.value)}
           fullWidth
           margin="normal"
+          InputLabelProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
+            InputProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
         />
         <TextField
           label="Tags"
@@ -42,6 +54,18 @@ const AddIssue = ({ isOpen, onClose }) => {
           onChange={(e) => setTags(e.target.value)}
           fullWidth
           margin="normal"
+          InputLabelProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
+            InputProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
         />
         <TextField
           label="Assignee"
@@ -49,8 +73,42 @@ const AddIssue = ({ isOpen, onClose }) => {
           onChange={(e) => setAssignee(e.target.value)}
           fullWidth
           margin="normal"
+          InputLabelProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
+            InputProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
         />
-        <Button variant="contained" onClick={handleSubmit}>Add Issue</Button>
+        <Button variant="contained" onClick={handleSubmit}
+            style={{
+              fontSize: 'small',
+              fontFamily: 'Poppins, sans-serif',
+              paddingTop: '6px',
+              paddingBottom: '6px',
+              paddingLeft: '12px',
+              paddingRight: '12px',
+              color: 'white',
+              backgroundColor: '#499270',
+              borderRadius: '4px',
+              transition: '0s',
+            }}
+            sx={{ mt: 2 }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--light-green)'; 
+              e.currentTarget.style.color = 'black';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = '#499270';
+              e.currentTarget.style.color = 'white';
+            }}>
+          Add Issue</Button>
       </Box>
     </Modal>
   );

@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Snackbar } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getFirestore, doc, addDoc, collection } from 'firebase/firestore';
 import "../../colors.css";
+import"./index.css";
 
 const Register = () => {
     const [projectName, setProjectName] = useState('');
@@ -37,10 +38,10 @@ const Register = () => {
     };
 
     return (
-        <Box className="register-container" sx={{ maxWidth: 480, mx: 'auto', my: 4, marginTop: '100px'}}>
-            <Typography variant="h5" component="h1" gutterBottom>
-                Register a Project
-            </Typography>
+        <Box className="register-container" sx={{ maxWidth: 480, mx: 'auto', my: 4, marginTop: '110px'}}>
+            <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between">
+                <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Register a Project</h1>
+            </Box>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="Project Name"
@@ -50,8 +51,39 @@ const Register = () => {
                     fullWidth
                     required
                     margin="normal"
+                    InputLabelProps={{
+                        sx: {
+                          fontSize: 'medium',
+                          fontFamily: 'Poppins, sans-serif',
+                        },
+                      }}
+                      InputProps={{
+                        sx: {
+                          fontSize: 'medium',
+                          fontFamily: 'Poppins, sans-serif',
+                        },
+                      }}
+                    
                 />
-                <Button type="submit" variant="contained" color="primary" sx={{ mt: 2, backgroundColor: 'var(--dark-green)'}}>
+                <Button type="submit" variant="contained" className='btn-reg' 
+                          style={{
+                            fontSize: 'medium',
+                            fontFamily: 'Poppins, sans-serif',
+                            padding: '8px',
+                            color: 'white',
+                            backgroundColor: '#499270',
+                            borderRadius: '4px',
+                            transition: '0s',
+                          }}
+                          sx={{ mt: 2 }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = 'var(--light-green)'; 
+                            e.currentTarget.style.color = 'black';
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = '#499270';
+                            e.currentTarget.style.color = 'white';
+                          }}>
                     Register
                 </Button>
             </form>
@@ -64,7 +96,7 @@ const Register = () => {
                 project as well as implement our issue submission endpoint in your project. 
                 Project Token: ${docId}`}
                 action={
-                    <Button color="var(--dark-green)" size="small" onClick={handleCloseSnackbar}>
+                    <Button className='btn-del' size="small" onClick={handleCloseSnackbar}>
                         Close
                     </Button>
                 }

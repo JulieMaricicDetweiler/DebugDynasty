@@ -135,20 +135,20 @@ const Dashboard = () => {
                     <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
                         <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }}>
-                            <DeleteIcon style={{ marginRight: '12px', fontSize: '25px' }} />
-                            Delete
+                            <Button fullWidth className="btn-nice">
+                            <span><DeleteIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }}/>
+                            Delete</span>
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }} onClick={toggleGitHubAuthModal}>
-                            <GitHubIcon style={{ marginRight: '12px', fontSize: '25px' }} />
-                            GitHub
+                            <Button fullWidth className="btn-nice" onClick={toggleGitHubAuthModal}>
+                            <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
+                            GitHub</span>
                             </Button>
                             <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: 'var(--db-edit-buttons)', borderRadius: 1 }} onClick={toggleSelectAll}>
+                            <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>
                             Select All
                             </Button>
                         </Grid>
