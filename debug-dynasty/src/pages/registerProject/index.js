@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Snackbar } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getFirestore, doc, addDoc, collection, setDoc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../components/authContext/authContext';
+//import { useCurrentProject } from '../../components/ProjectContext/projectContext';
 import "../../colors.css";
 import"./index.css";
 
@@ -12,7 +13,7 @@ const Register = () => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [docId, setDocId] = useState('');
     const {currentUser} = React.useContext(AuthContext);
-    
+    //const { setCurrentProject } = useCurrentProject();
 
     const handleProjectNameChange = (event) => {
         setProjectName(event.target.value);
@@ -48,6 +49,10 @@ const Register = () => {
 
             setDocId(docRef.id); // save document ID for the token message
             setOpenSnackbar(true); // open snackbar and display token
+
+            // Set the current project
+            //setCurrentProject(docRef.id);
+
             setProjectName(''); //reset field
         } catch (error) {
             console.error("Error adding document: ", error);

@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button } from '@mui/material';
+import firebaseConfig from '../../firebase/firebaseConfig';
+import { addDoc, collection, doc } from 'firebase/firestore';
+import { useCurrentProject } from '../ProjectContext/projectContext';
 
 const AddIssue = ({ isOpen, onClose }) => {
+  const { currentProject } = useCurrentProject();
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [assignee, setAssignee] = useState('');
 
   const handleSubmit = () => {
-    // Add logic to submit the issue to the backend
-    // Reset form fields
-    setDescription('');
-    setTags('');
-    setAssignee('');
-    onClose();
+    try {
+      if (!currentProject) {
+        console.error("current project is not set.");
+        return;
+      }
+      // Add logic to submit the issue to the backend
+      const issueData = { description, tags, assignee };
+      // Add issue to the current project's issues subcollection
+      addDoc(collection(doc(firebaseConfig.firestore, 'projects/{currentProject}/users/{currentUser.uid}'), 'issues'), issueData)
+        .then(() => {
+          setDescription('');
+          setTags('');
+          setAssignee('');
+          onClose();
+        })
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
   return (

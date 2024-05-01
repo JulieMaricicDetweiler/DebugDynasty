@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Link } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getFirestore, doc, addDoc, collection, setDoc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../components/authContext/authContext';
+import { useCurrentProject } from '../../components/ProjectContext/projectContext';
 import "../../colors.css";
 
 const AddSelf = () => {
@@ -11,7 +12,7 @@ const AddSelf = () => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [docId, setDocId] = useState('');
     const {currentUser} = React.useContext(AuthContext);
-    
+    const { setCurrentProject } = useCurrentProject();
 
     const handleProjectTokenChange = (event) => {
         setProjectToken(event.target.value);
@@ -37,6 +38,11 @@ const AddSelf = () => {
                     lastName: userData.lastName,
                     email: userData.email
                 });
+
+                // Set the current project
+                // ERR: using this code results in a type error
+                // (setCurrentProject is not a function at handleSubmit)
+                setCurrentProject(projectToken);
             } else {
                 console.log("No such user!");
             }
