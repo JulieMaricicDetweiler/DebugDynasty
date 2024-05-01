@@ -37,8 +37,9 @@ const Register = () => {
     
                     // Set the user document in the project's users subcollection using the uid as the document ID
                     await setDoc(projectUsersRef, {
-                        firstName: userData.firstName, // Assuming these fields exist in your main users collection
-                        lastName: userData.lastName
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        email: userData.email
                     });
                 } else {
                     console.log("No such user!");
