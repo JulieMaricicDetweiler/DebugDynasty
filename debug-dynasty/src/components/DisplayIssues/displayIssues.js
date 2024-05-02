@@ -13,19 +13,19 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
         else {
             if(issue.severity === 'low') {
                 if(editMode && selectedIssues.includes(issue.id)) {
-                    return 'var(--selected-accordion)';
+                    return '#67cf6e';
                 }
                 return 'var(--accordion)';
             } 
             else if(issue.severity === 'medium') {
                 if(editMode && selectedIssues.includes(issue.id)) {
-                    return '#9c953a';
+                    return '#d6bf40';
                 }
                 return '#d9cb80';
             } 
             else if(issue.severity === 'high') {
                 if(editMode && selectedIssues.includes(issue.id)) {
-                    return '#a84b3e';
+                    return '#b33030';
                 }
                 return '#b86054';
             } else{
@@ -53,7 +53,8 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
                                 editMode && <CheckCircle style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} /> :
                                 editMode && <CheckCircleOutlineIcon style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} />
                             }
-                            {issue.id} - {issue.title}
+                            {/*{issue.id} - {issue.title}*/}
+                            {issue.title}
                             <ExpandMoreIcon style={{ fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle' }} />
                         </Typography>
                     </AccordionSummary>

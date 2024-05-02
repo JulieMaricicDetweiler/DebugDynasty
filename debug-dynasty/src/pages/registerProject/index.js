@@ -51,8 +51,8 @@ const Register = () => {
             setDocId(docRef.id); // save document ID for the token message
             setOpenSnackbar(true); // open snackbar and display token
 
-
             setProjectName(''); //reset field
+
         } catch (error) {
             console.error("Error adding document: ", error);
         }

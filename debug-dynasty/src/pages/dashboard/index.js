@@ -136,22 +136,26 @@ const Dashboard = () => {
                     <>
                     <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
                         <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
-                        <Select
-                            value={selectedProject}
-                            onChange={handleProjectChange}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            style={{ width: 200 }}
-                        >
-                            {projects.map(project => (
-                                <MenuItem key={project.id} value={project.id}>{project.projectName}</MenuItem>
-                            ))}
-                        </Select>
+                        <Box>
+                            <Box sx={{ color: 'var(--dark-green)', fontSize: '16px', textAlign: 'center' }}>
+                                <b>Project Selection</b>
+                            </Box>
+                            <Select
+                                value={selectedProject}
+                                onChange={handleProjectChange}
+                                displayEmpty
+                                inputProps={{ 'aria-label': 'Without label' }}
+                                style={{ width: 200 }}
+                            >
+                                {projects.map(project => (
+                                    <MenuItem key={project.id} value={project.id} sx={{ fontSize: '16px' }}>{project.projectName}</MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                         <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
                         <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
                         </div>
-                        
                     </Box>
 
                         <DisplayIssues 
@@ -172,20 +176,20 @@ const Dashboard = () => {
                         <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
                             <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
                             <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={handleDeleteIssues}>
+                                <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: '#BABABA', borderRadius: '0px' }} onClick={handleDeleteIssues}>
                                 <span><DeleteIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }}/>
                                 Delete</span>
                                 </Button>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={toggleGitHubAuthModal}>
+                                <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: '#BABABA', borderRadius: '0px' }} onClick={toggleGitHubAuthModal}>
                                 <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
                                 GitHub</span>
                                 </Button>
-                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
+                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} currentProject={currentProject} />
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>
+                                <Button fullWidth style={{ fontSize: 'large', padding: '10px', color: 'black', backgroundColor: '#BABABA', borderRadius: '0px' }} onClick={toggleSelectAll}>
                                 Select All
                                 </Button>
                             </Grid>
