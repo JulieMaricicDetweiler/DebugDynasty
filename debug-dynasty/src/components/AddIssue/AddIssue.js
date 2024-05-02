@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { Modal, Box, TextField, Button } from '@mui/material';
+import { Modal, Box, TextField, Button, MenuItem, Select } from '@mui/material';
 import { AuthContext } from '../authContext/authContext';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { doc, collection, setDoc, getDoc, getDocs, addDoc } from 'firebase/firestore';
-
 
 const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [assignee, setAssignee] = useState('');
+  const [severity, setSeverity] = useState('');
   const {currentUser} = React.useContext(AuthContext);
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    const month = date.getMonth() + 1;
+    const month = date.getMonth() + 1; // getMonth() returns 0 for January, 11 for December
     const day = date.getDate();
     const year = date.getFullYear(); 
     return `${month}-${day}-${year}`; 
-};
+  };
 
   const handleSubmit = async () => {
     let effectiveAssignee = assignee;
@@ -36,13 +36,17 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
             tags: tags.split(',').map(tag => tag.trim()),
             time: formatDate(Date.now()),
             fromUser: false,
-            status: 'Open'
+            status: 'Open',
+            severity: severity
         });
     } catch (error) {
         console.log("Error creating issue: ", error);
     }
-};
+  };
 
+  const handleSeverity = (event) => {
+    setSeverity(event.target.value);
+  };
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -55,7 +59,9 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
-        p: 4
+        p: 4,
+        display: 'flex',
+        flexDirection: 'column' // Ensures vertical layout
       }}>
         <h1>Add Issue</h1>
         <TextField
@@ -64,60 +70,21 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
           onChange={(e) => setTitle(e.target.value)}
           fullWidth
           margin="normal"
-          InputLabelProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
-            InputProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
         />
-
         <TextField
           label="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           fullWidth
           margin="normal"
-          InputLabelProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
-            InputProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
         />
-
         <TextField
           label="Tags"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
           fullWidth
           margin="normal"
-          InputLabelProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
-            InputProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
         />
-
         {!fromIndividual &&
           <TextField
             label="Assignee"
@@ -125,44 +92,32 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
             onChange={(e) => setAssignee(e.target.value)}
             fullWidth
             margin="normal"
-            InputLabelProps={{
-                sx: {
-                  fontSize: 'small',
-                  fontFamily: 'Poppins, sans-serif',
-                },
-              }}
-              InputProps={{
-                sx: {
-                  fontSize: 'small',
-                  fontFamily: 'Poppins, sans-serif',
-                },
-              }}
           />
         }
-
+        <Select
+          value={severity}
+          onChange={handleSeverity}
+          displayEmpty
+          fullWidth
+          margin="normal"
+          style={{marginTop: '15px'}}
+        >
+          {severity === '' && <MenuItem value="" disabled>Severity</MenuItem>}
+          <MenuItem value="low">Low</MenuItem>
+          <MenuItem value="medium">Medium</MenuItem>
+          <MenuItem value="high">High</MenuItem>
+        </Select>
         <Button variant="contained" onClick={handleSubmit}
-            style={{
-              fontSize: 'small',
-              fontFamily: 'Poppins, sans-serif',
-              paddingTop: '6px',
-              paddingBottom: '6px',
-              paddingLeft: '12px',
-              paddingRight: '12px',
-              color: 'white',
-              backgroundColor: '#499270',
-              borderRadius: '4px',
-              transition: '0s',
-            }}
-            sx={{ mt: 2 }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--light-green)'; 
-              e.currentTarget.style.color = 'black';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = '#499270';
-              e.currentTarget.style.color = 'white';
-            }}>
-          Add Issue</Button>
+          sx={{
+            mt: 2,
+            bgcolor: '#499270',
+            '&:hover': {
+              bgcolor: 'var(--light-green)',
+              color: 'black'
+            }
+          }}>
+          Add Issue
+        </Button>
       </Box>
     </Modal>
   );

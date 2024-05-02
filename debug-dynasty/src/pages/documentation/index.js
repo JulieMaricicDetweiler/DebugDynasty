@@ -57,8 +57,9 @@ const Documentation = () => {
     "description": "string",
     "reporter": "string",
     "severity": "string",
-    "status": "Open",
-    "timestamp": "ISO date-time string"
+    "status": 'Open',
+    "timestamp": "ISO date-time string",
+    "fromUser": true
 }`}
                         </pre>
                         - 400 Bad Request: Required fields are missing or the request format is incorrect.<br/>
@@ -81,7 +82,7 @@ const Documentation = () => {
     body: JSON.stringify({
         title: 'Login Failure',
         description: 'User unable to login using OAuth2',
-        reporter: 'developer@example.com',
+        reporter: 'user@example.com',
         severity: 'high',
         projectToken: 'your_project_token_here'
     })
