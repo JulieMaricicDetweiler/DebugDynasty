@@ -134,28 +134,29 @@ const Dashboard = () => {
                     {projects.length > 0 
                     ?
                     <>
-                    <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
+                    <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'30px'}>
                         <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
-                        <Box>
-                            <Box sx={{ color: 'var(--dark-green)', fontSize: '16px', textAlign: 'center' }}>
-                                <b>Project Selection</b>
-                            </Box>
-                            <Select
-                                value={selectedProject}
-                                onChange={handleProjectChange}
-                                displayEmpty
-                                inputProps={{ 'aria-label': 'Without label' }}
-                                style={{ width: 200 }}
-                            >
-                                {projects.map(project => (
-                                    <MenuItem key={project.id} value={project.id} sx={{ fontSize: '16px' }}>{project.projectName}</MenuItem>
-                                ))}
-                            </Select>
-                        </Box>
+
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                         <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
                         <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
                         </div>
+                    </Box>
+                    <Box paddingBottom={'40px'}>
+                        <Box sx={{ color: 'var(--dark-green)', fontSize: '16px', textAlign: 'left' }}>
+                            <b>Project Selection</b>
+                        </Box>
+                        <Select
+                            value={selectedProject}
+                            onChange={handleProjectChange}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                            style={{ width: 200, fontSize: 'medium'}}
+                        >
+                            {projects.map(project => (
+                                <MenuItem key={project.id} value={project.id} sx={{ fontSize: 'medium' }}>{project.projectName}</MenuItem>
+                            ))}
+                        </Select>
                     </Box>
 
                         <DisplayIssues 

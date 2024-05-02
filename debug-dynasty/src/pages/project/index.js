@@ -113,19 +113,25 @@ const ProjectDashboard = () => {
                     {projects.length > 0 
                     ?
                     <>
-                    <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
+                    <Box className="dashboard-header" display={'flex'} flexDirection={'column'} justifyContent="space-between" paddingBottom={'50px'}>
                         <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Project Dashboard</h1>
-                        <Select
-                            value={selectedProject}
-                            onChange={handleProjectChange}
-                            displayEmpty
-                            inputProps={{ 'aria-label': 'Without label' }}
-                            style={{ width: 200 }}
-                        >
-                            {projects.map(project => (
-                                <MenuItem key={project.id} value={project.id}>{project.projectName}</MenuItem>
-                            ))}
-                        </Select>
+                        <hr></hr>
+                        <Box>
+                            <Box sx={{ color: 'var(--dark-green)', fontSize: '16px', textAlign: 'left' }}>
+                                <b>Project Selection</b>
+                            </Box>
+                            <Select
+                                value={selectedProject}
+                                onChange={handleProjectChange}
+                                displayEmpty
+                                inputProps={{ 'aria-label': 'Without label' }}
+                                style={{ width: 200, fontSize: 'medium'}}
+                            >
+                                {projects.map(project => (
+                                    <MenuItem key={project.id} value={project.id} sx={{ fontSize: 'medium' }}>{project.projectName}</MenuItem>
+                                ))}
+                            </Select>
+                        </Box>
                         
                     </Box>
 

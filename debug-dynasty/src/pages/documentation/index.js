@@ -110,7 +110,7 @@ const Documentation = () => {
                         <br/>
                         3. Enter your desired information into the issue fields and submit <br/>
                         <br/>
-                        4. If successful, you should be able to go back to the project dashboard and see your issue posted <br/>
+                        4. If successful, you should be able to go back to the <a href="/project" style={{fontSize: 'large', marginRight: '1px'}}>project dashboard</a> and see your issue posted under "Unassigned Issues"
                     </Typography>
                 </Box>
             </Box>
