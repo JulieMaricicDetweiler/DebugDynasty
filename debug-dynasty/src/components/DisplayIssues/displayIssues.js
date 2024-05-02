@@ -68,7 +68,7 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
                             </Typography>
 
                             <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins', color: 'var(--black-green)' }}>
-                                <strong>Tags:</strong> {issue.tags.join(", ")}
+                                <strong>Tags:</strong> {issue.tags ? issue.tags.join(", ") : ""}
                             </Typography>
 
 

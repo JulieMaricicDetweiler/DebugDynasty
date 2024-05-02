@@ -65,6 +65,12 @@ function Navbar() {
                                 >
                                     <MenuItem 
                                     onClick={handleClose} 
+                                    component={Link} to="/project" 
+                                    style={{fontSize: 'small', fontFamily: 'Poppins', color: 'var(--black-green)'}}>
+                                        Project Dashboard
+                                    </MenuItem>
+                                    <MenuItem 
+                                    onClick={handleClose} 
                                     component={Link} to="/register" 
                                     style={{fontSize: 'small', fontFamily: 'Poppins', color: 'var(--black-green)'}}>
                                         Register New Project

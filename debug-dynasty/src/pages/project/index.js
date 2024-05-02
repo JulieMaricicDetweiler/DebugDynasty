@@ -14,7 +14,7 @@ import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
 import { useCurrentProject } from '../../components/ProjectContext/projectContext';
 import { doc, collection, setDoc, getDoc, getDocs, onSnapshot, writeBatch } from 'firebase/firestore';
 import DisplayIssues from '../../components/DisplayIssues/displayIssues';
-import "./index.css";
+import "../dashboard/index.css";
 import "../../colors.css"
 
 const Dashboard = () => {
@@ -26,11 +26,15 @@ const Dashboard = () => {
     const { currentProject, setCurrentProject } = useCurrentProject();
     const [projects, setProjects] = React.useState([]);
     const [issues, setIssues] = React.useState([]);
+    const [unassignedIssues, setUnassignedIssues] = React.useState([]);
     const [selectedProject, setSelectedProject] = React.useState('');
+    const [projectIssues, setProjectIssues] = React.useState({});
 
+    //stays same
     React.useEffect(() => {
         const getProjects = async () => {
         if (currentUser) {
+            console.log("Curr Project: " + currentProject);
             const userDocRef = doc(firebaseConfig.firestore, "users", currentUser.uid);
             const userDocSnapshot = await getDoc(userDocRef);
 
@@ -43,6 +47,7 @@ const Dashboard = () => {
                         ...doc.data()
                     }));
                     setProjects(fetchedProjects);
+                    setCurrentProject(fetchedProjects[0].id);
                 }
             }
         };
@@ -51,19 +56,28 @@ const Dashboard = () => {
     }, [currentUser, setCurrentProject]);
 
     
-    React.useEffect(() => {
-        if (currentProject && currentUser && currentUser.uid) {
-            console.log("Current Project: " + currentProject);
-            const issuesRef = collection(firebaseConfig.firestore, `projects/${currentProject}/users/${currentUser.uid}/issues`);
-            const unsubscribe = onSnapshot(issuesRef, (snapshot) => {
-                const fetchedIssues = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setIssues(fetchedIssues);
-            }, error => {
-                console.error("Failed to fetch issues:", error);
-            });
-    
-            return () => unsubscribe(); // Cleanup subscription on unmount
+    React.useEffect(()=> {
+        const getIssues = async () => {
+        console.log("Current Project: " + currentProject);
+        if(currentProject) {
+            const projectRef = doc(firebaseConfig.firestore, "projects", currentProject);
+            const usersRef = collection(projectRef, "users");
+            const usersSnap = await getDocs(usersRef);
+
+            const issuesByUser = {};
+            for (let userDoc of usersSnap.docs) {
+                const issuesRef = collection(userDoc.ref, "issues");
+                const issuesSnap = await getDocs(issuesRef);
+                issuesByUser[userDoc.id] = issuesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            }
+            setProjectIssues(issuesByUser);
+
+            const unassignedRef = collection(firebaseConfig.firestore, `projects/${currentProject}/submittedIssues`);
+            const snapshot = await getDocs(unassignedRef);
+            setUnassignedIssues(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         }
+    };
+    getIssues();
     }, [currentProject, currentUser]);
     
 
@@ -135,7 +149,7 @@ const Dashboard = () => {
                     ?
                     <>
                     <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
-                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
+                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Project Dashboard</h1>
                         <Select
                             value={selectedProject}
                             onChange={handleProjectChange}
@@ -154,17 +168,26 @@ const Dashboard = () => {
                         
                     </Box>
 
-                        <DisplayIssues 
-                            issues={issues} 
-                            editMode={editMode} 
-                            selectedIssues={selectedIssues} 
-                            toggleIssueSelection={toggleIssueSelection} 
-                        />
+                    {currentProject &&
+                    <Box>
+                        {Object.entries(projectIssues).map(([userId, issues]) => (
+                            <Box key={userId} mb={4}>
+                                {/* Assuming you have a way to get user details, display them here */}
+                                <Typography variant="h6">Issues for User ID: {userId}</Typography>
+                                <DisplayIssues issues={issues} editMode={editMode} selectedIssues={selectedIssues} toggleIssueSelection={toggleIssueSelection}/>
+                            </Box>
+                        ))}
+                        <hr></hr>
+                        <Typography variant="h6" paddingTop={'20px'}>Unassigned Issues</Typography>
+                        <DisplayIssues issues={unassignedIssues} editMode={editMode} selectedIssues={selectedIssues} toggleIssueSelection={toggleIssueSelection}/>
+                    </Box>
+                    }
+
                         
                         <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
                             <ControlPointIcon cursor='pointer' style={{ fontSize: '30px', color: "var(--black-green)"}} onClick={toggleAddIssueModal} />
                             {/*Add Issues modal*/}
-                            <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} fromIndividual={true} currentProject={currentProject} />
+                            <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} fromIndividual={false} currentProject={currentProject} />
                         </Box>
 
                         {//button options when in edit mode
@@ -182,7 +205,7 @@ const Dashboard = () => {
                                 <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
                                 GitHub</span>
                                 </Button>
-                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} currentProject={currentProject} />
+                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>

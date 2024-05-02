@@ -31,12 +31,12 @@ const AddSelf = () => {
             const projectSnap = await getDoc(projectRef);
             if(projectSnap.exists()) {
                 setProjectName(projectSnap.data().name);
-
+                const projName = projectSnap.data().name;
                 // Check if project exists for user
                 const userProjectsSnap = await getDoc(doc(userProjectsRef, projectToken));
                 if (!userProjectsSnap.exists()) {
                     // Add project token to the user's projects subcollection
-                    await setDoc(doc(userProjectsRef, projectToken), { projectToken, projectName });
+                    await setDoc(doc(userProjectsRef, projectToken), { projectToken, projName});
                   
                     // Fetch user data
                     const userSnap = await getDoc(userRef);
