@@ -32,7 +32,8 @@ exports.submitIssue = functions.https.onRequest(async (req, res) => {
                 reporter,
                 severity,
                 status: 'Open',
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                fromUser: true
             };
 
             // Write the issue to the specific project's 'submittedIssues' subcollection

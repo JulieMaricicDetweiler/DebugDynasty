@@ -12,7 +12,7 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add
 import AddIssue from '../../components/AddIssue/AddIssue';
 import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
 import { useCurrentProject } from '../../components/ProjectContext/projectContext';
-import { doc, collection, setDoc, getDoc, getDocs } from 'firebase/firestore';
+import { doc, collection, setDoc, getDoc, getDocs, onSnapshot, writeBatch } from 'firebase/firestore';
 import DisplayIssues from '../../components/DisplayIssues/displayIssues';
 import "./index.css";
 import "../../colors.css"
@@ -25,35 +25,8 @@ const Dashboard = () => {
     const [isGitHubAuthModalOpen, setIsGitHubAuthModalOpen] = React.useState(false);
     const { currentProject, setCurrentProject } = useCurrentProject();
     const [projects, setProjects] = React.useState([]);
+    const [issues, setIssues] = React.useState([]);
     const [selectedProject, setSelectedProject] = React.useState('');
-
-    //temporary dummy data
-    const issues = [
-        {
-            id: "1",
-            description: "Fix layout bug on dashboard",
-            details: {
-                tags: ["bug", "UI", "high-priority"],
-                assignee: "John Doe"
-            }
-        },
-        {
-            id: "2",
-            description: "Update dependencies to latest versions",
-            details: {
-                tags: ["maintenance", "backend"],
-                assignee: "Jane Smith"
-            }
-        },
-        {
-            id: "3",
-            description: "Implement feature X according to spec",
-            details: {
-                tags: ["feature", "new"],
-                assignee: "Alice Johnson"
-            }
-        }
-    ];
 
     React.useEffect(() => {
         const getProjects = async () => {
@@ -80,10 +53,19 @@ const Dashboard = () => {
 
     
     React.useEffect(() => {
-        console.log("Selected Project ID:", selectedProject);
-    }, [currentProject]);
-
-
+        if (currentProject && currentUser && currentUser.uid) {
+            const issuesRef = collection(firebaseConfig.firestore, `projects/${currentProject}/users/${currentUser.uid}/issues`);
+            const unsubscribe = onSnapshot(issuesRef, (snapshot) => {
+                const fetchedIssues = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setIssues(fetchedIssues);
+            }, error => {
+                console.error("Failed to fetch issues:", error);
+            });
+    
+            return () => unsubscribe(); // Cleanup subscription on unmount
+        }
+    }, [currentProject, currentUser]);
+    
 
     const handleProjectChange = (event) => {
         const newProjectId = event.target.value;
@@ -93,6 +75,26 @@ const Dashboard = () => {
         }
         else {
         setCurrentProject(newProjectId);
+        }
+    };
+
+    const handleDeleteIssues = async () => {
+        const batch = writeBatch(firebaseConfig.firestore);
+
+        selectedIssues.forEach(async (issueId) => {
+            const issueRef = doc(firebaseConfig.firestore, `projects/${currentProject}/users/${currentUser.uid}/issues`, issueId);
+            batch.delete(issueRef); //prepare delete
+        });
+
+        try {
+            await batch.commit();
+            console.log('Selected issues deleted successfully');
+            //fetch issues again or remove them from state to update the UI
+            const updatedIssues = issues.filter(issue => !selectedIssues.includes(issue.id));
+            setIssues(updatedIssues); //update the state to reflect the deletion in the UI
+            setSelectedIssues([]); //clear selected issues after deletion
+        } catch (error) {
+            console.error('Error deleting selected issues:', error);
         }
     };
 
@@ -174,7 +176,7 @@ const Dashboard = () => {
                     <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
                         <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
                         <Grid item xs={12} sm={4}>
-                            <Button fullWidth className="btn-nice">
+                            <Button fullWidth className="btn-nice" onClick={handleDeleteIssues}>
                             <span><DeleteIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }}/>
                             Delete</span>
                             </Button>
