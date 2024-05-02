@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Link } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getFirestore, doc, addDoc, collection, setDoc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../components/authContext/authContext';
+import { useCurrentProject } from '../../components/ProjectContext/projectContext';
 import "../../colors.css";
 
 const AddSelf = () => {
@@ -12,7 +13,7 @@ const AddSelf = () => {
     const [projectName, setProjectName] = useState('');
     const [docId, setDocId] = useState('');
     const {currentUser} = React.useContext(AuthContext);
-    
+    const { setCurrentProject } = useCurrentProject();
 
     const handleProjectTokenChange = (event) => {
         setProjectToken(event.target.value);
@@ -36,7 +37,7 @@ const AddSelf = () => {
                 if (!userProjectsSnap.exists()) {
                     // Add project token to the user's projects subcollection
                     await setDoc(doc(userProjectsRef, projectToken), { projectToken, projectName });
-
+                  
                     // Fetch user data
                     const userSnap = await getDoc(userRef);
                     if (userSnap.exists()) {
