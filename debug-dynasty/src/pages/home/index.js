@@ -17,7 +17,7 @@ const Home = () => {
             backgroundPosition: 'center',
             position: 'relative'
             }}>
-                <h1><span>Simplifying the debugging process,</span> <span>one report at a time</span></h1>
+                <h1><span style={{fontSize: '65px', paddingTop: '30px'}}>Simplifying the debugging process,</span> <span style={{fonstSize:'50px'}}>one report at a time</span></h1>
                 <p className="u-text-small u-text-light">At DebugDynasty, we offer a sophisticated and user-friendly platform designed to streamline the management of bug reports and user feedback for software developers. 
                     Our solution provides an automated process for efficiently tracking application issues, freeing up valuable time and resources.</p>
                 <div className="header-buttons">
