@@ -53,7 +53,8 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
                                 editMode && <CheckCircle style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} /> :
                                 editMode && <CheckCircleOutlineIcon style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} />
                             }
-                            {issue.id} - {issue.title}
+                            {/*{issue.id} - {issue.title}*/}
+                            {issue.title}
                             <ExpandMoreIcon style={{ fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle' }} />
                         </Typography>
                     </AccordionSummary>
