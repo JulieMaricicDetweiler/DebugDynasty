@@ -34,7 +34,9 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
             title: title,
             description: description,
             tags: tags.split(',').map(tag => tag.trim()),
-            time: formatDate(Date.now())
+            time: formatDate(Date.now()),
+            fromUser: false,
+            status: 'Open'
         });
     } catch (error) {
         console.log("Error creating issue: ", error);

@@ -8,7 +8,7 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
     return (
         <>
             {issues.map((issue) => (
-                <Accordion key={issue.id} style={{ marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? 'var(--selected-accordion)' : 'var(--accordion)' }} disableGutters>
+                <Accordion key={issue.id} style={{ marginBottom: '15px', backgroundColor: issue.status !== 'Open' ? '#76aecf' :(editMode && selectedIssues.includes(issue.id) ? 'var(--selected-accordion)' : 'var(--accordion)') }} disableGutters>
                     <AccordionSummary
                         aria-controls="panel1a-content"
                         id="panel1a-header"
@@ -20,18 +20,34 @@ const DisplayIssues = ({ issues, editMode, selectedIssues, toggleIssueSelection 
                                 editMode && <CheckCircle style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} /> :
                                 editMode && <CheckCircleOutlineIcon style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle' }} />
                             }
-                            {issue.id} - {issue.description}
+                            {issue.id} - {issue.title}
                             <ExpandMoreIcon style={{ fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle' }} />
                         </Typography>
                     </AccordionSummary>
                     {!editMode && (
                         <AccordionDetails>
-                            <Typography variant="body2" style={{ fontSize: 'large' }}>
-                                <strong>Tags:</strong> {issue.details.tags.join(", ")}
+                            <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins' }}>
+                                <strong>Description:</strong> {issue.description}
                             </Typography>
-                            <Typography variant="body2" style={{ fontSize: 'large' }}>
-                                <strong>Assignee:</strong> {issue.details.assignee}
+
+                            {issue.fromUser &&
+                            <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins' }}>
+                                <strong>Originated from user: </strong> {issue.reporter}
                             </Typography>
+                            }
+
+                            <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins' }}>
+                                <strong>Tags:</strong> {issue.tags.join(", ")}
+                            </Typography>
+
+                            <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins' }}>
+                                <strong>Time Stamp:</strong> {issue.time}
+                            </Typography>
+
+                            <Typography variant="body2" style={{ fontSize: 'large', fontFamily: 'Poppins' }}>
+                                <strong>Status:</strong> {issue.status}
+                            </Typography>
+
                         </AccordionDetails>
                     )}
                 </Accordion>
