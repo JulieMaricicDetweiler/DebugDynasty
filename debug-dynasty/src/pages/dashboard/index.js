@@ -1,7 +1,7 @@
 import * as React from 'react';
 import firebaseConfig from "../../firebase/firebaseConfig";
 import { AuthContext } from "../../components/authContext/authContext";
-import {Typography, Link, Box, Accordion, AccordionSummary, AccordionDetails, Button, Grid} from '@mui/material';
+import {Typography, Link, Box, Accordion, AccordionSummary, AccordionDetails, Button, Grid, Select, MenuItem} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircle from '@mui/icons-material/CheckCircle';
@@ -11,6 +11,9 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add new item
 import AddIssue from '../../components/AddIssue/AddIssue';
 import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
+import { useCurrentProject } from '../../components/ProjectContext/projectContext';
+import { doc, collection, setDoc, getDoc, getDocs } from 'firebase/firestore';
+import DisplayIssues from '../../components/DisplayIssues/displayIssues';
 import "./index.css";
 import "../../colors.css"
 
@@ -20,6 +23,9 @@ const Dashboard = () => {
     const [selectedIssues, setSelectedIssues] = React.useState([]);
     const [isAddIssueModalOpen, setIsAddIssueModalOpen] = React.useState(false);
     const [isGitHubAuthModalOpen, setIsGitHubAuthModalOpen] = React.useState(false);
+    const { currentProject, setCurrentProject } = useCurrentProject();
+    const [projects, setProjects] = React.useState([]);
+    const [selectedProject, setSelectedProject] = React.useState('');
 
     //temporary dummy data
     const issues = [
@@ -48,6 +54,48 @@ const Dashboard = () => {
             }
         }
     ];
+
+    React.useEffect(() => {
+        const getProjects = async () => {
+        if (currentUser) {
+            const userDocRef = doc(firebaseConfig.firestore, "users", currentUser.uid);
+            const userDocSnapshot = await getDoc(userDocRef);
+
+            if (userDocSnapshot.exists()) {
+                const projectsRef = collection(userDocRef, "projects");
+                const projectsSnap = await getDocs(projectsRef);
+                if(!projectsSnap.empty) {
+                    const fetchedProjects = projectsSnap.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }));
+                    setProjects(fetchedProjects);
+                }
+            }
+        };
+    };
+    getProjects();
+    }, [currentUser, setCurrentProject]);
+
+
+    
+    React.useEffect(() => {
+        console.log("Selected Project ID:", selectedProject);
+    }, [currentProject]);
+
+
+
+    const handleProjectChange = (event) => {
+        const newProjectId = event.target.value;
+        setSelectedProject(newProjectId);
+        if(!setCurrentProject) {
+            console.log("problem");
+        }
+        else {
+        setCurrentProject(newProjectId);
+        }
+    };
+
 
     const toggleEditMode = () => {
         setEditMode(!editMode);
@@ -84,50 +132,41 @@ const Dashboard = () => {
                 <Box className="dashboard-container" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
                     <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
                         <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
+                        {projects.length > 0 
+                        ?
+                        <>
+                        <Select
+                            value={selectedProject}
+                            onChange={handleProjectChange}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
+                            style={{ width: 200 }}
+                        >
+                            {projects.map(project => (
+                                <MenuItem key={project.id} value={project.id}>{project.projectName}</MenuItem>
+                            ))}
+                        </Select>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
-                            <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
+                        <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
+                        <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
                         </div>
+                        </>
+                        :
+                        <Typography>
+                            Not currently part of a project.
+                        </Typography>
+                        }
                     </Box>
-
-                    { //display dashboard issues
-                    issues.map((issue) => (
-                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? 'var(--selected-accordion)' : 'var(--accordion)'}} disableGutters>
-                            <AccordionSummary
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => toggleIssueSelection(issue.id)}
-                            >
-                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}}>
-                                    {selectedIssues.includes(issue.id) ?                                         
-                                        editMode && <CheckCircle
-                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
-                                    />:
-                                        editMode && <CheckCircleOutlineIcon 
-                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}} 
-                                    />  
-                                    }
-                                    {issue.id} - {issue.description}
-                                    <ExpandMoreIcon style= {{fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle'}}/>
-                                </Typography>
-                            </AccordionSummary>
-                            {!editMode && (
-                                <AccordionDetails>
-                                    <Typography variant="body2" style={{fontSize: 'large'}}>
-                                        <strong>Tags:</strong> {issue.details.tags.join(", ")}
-                                    </Typography>
-                                    <Typography variant="body2" style={{fontSize: 'large'}}>
-                                        <strong>Assignee:</strong> {issue.details.assignee}
-                                    </Typography>
-                                </AccordionDetails>
-                            )}
-                        </Accordion>
-                    ))}
+                    <DisplayIssues 
+                        issues={issues} 
+                        editMode={editMode} 
+                        selectedIssues={selectedIssues} 
+                        toggleIssueSelection={toggleIssueSelection} 
+                    />
                     <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
                         <ControlPointIcon cursor='pointer' style={{ fontSize: '30px', color: "var(--black-green)"}} onClick={toggleAddIssueModal} />
                         {/*Add Issues modal*/}
-                        <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} />
+                        <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} fromIndividual={true} currentProject={currentProject} />
                     </Box>
 
                     {//button options when in edit mode
