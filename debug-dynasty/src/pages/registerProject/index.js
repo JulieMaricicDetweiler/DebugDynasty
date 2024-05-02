@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, Snackbar } from '@mui/material';
 import firebaseConfig from '../../firebase/firebaseConfig';
 import { getFirestore, doc, addDoc, collection, setDoc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../components/authContext/authContext';
+//import { useCurrentProject } from '../../components/ProjectContext/projectContext';
 import "../../colors.css";
 import"./index.css";
 
@@ -11,8 +12,9 @@ const Register = () => {
     const [projectName, setProjectName] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [docId, setDocId] = useState('');
+    const [isCopied, setIsCopied] = useState(false);
     const {currentUser} = React.useContext(AuthContext);
-    
+    //const { setCurrentProject } = useCurrentProject();
 
     const handleProjectNameChange = (event) => {
         setProjectName(event.target.value);
@@ -48,6 +50,10 @@ const Register = () => {
 
             setDocId(docRef.id); // save document ID for the token message
             setOpenSnackbar(true); // open snackbar and display token
+
+            // Set the current project
+            //setCurrentProject(docRef.id);
+
             setProjectName(''); //reset field
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -55,8 +61,17 @@ const Register = () => {
     };
 
     // Handle snackbar close
-    const handleCloseSnackbar = () => {
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
         setOpenSnackbar(false);
+        setIsCopied(false);
+    };
+
+    const handleCopyToken = () => {
+        navigator.clipboard.writeText(docId);
+        setIsCopied(true);
     };
 
     return (
@@ -112,15 +127,33 @@ const Register = () => {
                 open={openSnackbar}
                 autoHideDuration={6000}
                 onClose={handleCloseSnackbar}
-                message={`Registration successful! 
-                IMPORTANT: Please make note of the following token as this will be used to register users to your 
-                project as well as implement our issue submission endpoint in your project. 
-                Project Token: ${docId}`}
+                message={(
+                    <div>
+                        <span className='custom-message'>{`Registration successful! 
+                        IMPORTANT: Please make note of the following token as this will be used to register users to your 
+                        project as well as implement our issue submission endpoint in your project. 
+                        Project Token: ${docId}`}</span>
+                        <Button
+                            className='custom-button'
+                            size="small"
+                            onClick={handleCopyToken}
+                            style={{
+                                marginLeft: '10px',
+                            }}
+                        >
+                            Copy Token
+                        </Button>
+                        {isCopied && <span style={{ marginLeft: '10px', fontSize: '20px' }}>Token Copied!</span>}
+                    </div>
+                )}
                 action={
-                    <Button className='btn-del' size="small" onClick={handleCloseSnackbar}>
+                    <Button className='custom-button' size="small" onClick={handleCloseSnackbar}>
                         Close
                     </Button>
                 }
+                ContentProps={{
+                    className: 'custom-snackbar',
+                }}
             />
         </Box>
     );

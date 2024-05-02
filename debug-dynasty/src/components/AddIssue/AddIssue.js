@@ -43,7 +43,6 @@ const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
     }
 };
 
-
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box sx={{
