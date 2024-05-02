@@ -17,7 +17,7 @@ import DisplayIssues from '../../components/DisplayIssues/displayIssues';
 import "../dashboard/index.css";
 import "../../colors.css"
 
-const Dashboard = () => {
+const ProjectDashboard = () => {
     const { currentUser } = React.useContext(AuthContext);
     const [editMode, setEditMode] = React.useState(false);
     const [selectedIssues, setSelectedIssues] = React.useState([]);
@@ -66,9 +66,13 @@ const Dashboard = () => {
 
             const issuesByUser = {};
             for (let userDoc of usersSnap.docs) {
+                const user = userDoc.data();
                 const issuesRef = collection(userDoc.ref, "issues");
                 const issuesSnap = await getDocs(issuesRef);
-                issuesByUser[userDoc.id] = issuesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                issuesByUser[userDoc.id] = {
+                    name: `${user.firstName} ${user.lastName}`,
+                    issues: issuesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+                };
             }
             setProjectIssues(issuesByUser);
 
@@ -92,30 +96,6 @@ const Dashboard = () => {
         }
     };
 
-    const handleDeleteIssues = async () => {
-        const batch = writeBatch(firebaseConfig.firestore);
-
-        selectedIssues.forEach(async (issueId) => {
-            const issueRef = doc(firebaseConfig.firestore, `projects/${currentProject}/users/${currentUser.uid}/issues`, issueId);
-            batch.delete(issueRef); //prepare delete
-        });
-
-        try {
-            await batch.commit();
-            console.log('Selected issues deleted successfully');
-            //fetch issues again or remove them from state to update the UI
-            const updatedIssues = issues.filter(issue => !selectedIssues.includes(issue.id));
-            setIssues(updatedIssues); //update the state to reflect the deletion in the UI
-            setSelectedIssues([]); //clear selected issues after deletion
-        } catch (error) {
-            console.error('Error deleting selected issues:', error);
-        }
-    };
-
-    const toggleEditMode = () => {
-        setEditMode(!editMode);
-        setSelectedIssues([]);
-    };
 
     const toggleIssueSelection = (issueId) => {
         if (selectedIssues.includes(issueId)) {
@@ -125,21 +105,6 @@ const Dashboard = () => {
         }
     };
 
-    const toggleSelectAll = () => {
-        if (selectedIssues.length === issues.length) {
-            setSelectedIssues([]); // If all issues are already selected, clear the selection
-        } else {
-            setSelectedIssues(issues.map(issue => issue.id)); // Otherwise, select all issues
-        }
-    };
-
-    const toggleAddIssueModal = () => {
-        setIsAddIssueModalOpen(!isAddIssueModalOpen);
-    };
-
-    const toggleGitHubAuthModal = () => {
-        setIsGitHubAuthModalOpen(!isGitHubAuthModalOpen);
-    };
 
     return (
         <div>
@@ -161,60 +126,26 @@ const Dashboard = () => {
                                 <MenuItem key={project.id} value={project.id}>{project.projectName}</MenuItem>
                             ))}
                         </Select>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
-                        <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
-                        </div>
                         
                     </Box>
 
                     {currentProject &&
                     <Box>
-                        {Object.entries(projectIssues).map(([userId, issues]) => (
+                        {Object.entries(projectIssues).map(([userId, userData]) => (
                             <Box key={userId} mb={4}>
-                                {/* Assuming you have a way to get user details, display them here */}
-                                <Typography variant="h6">Issues for User ID: {userId}</Typography>
-                                <DisplayIssues issues={issues} editMode={editMode} selectedIssues={selectedIssues} toggleIssueSelection={toggleIssueSelection}/>
+                                <Typography variant="h4" paddingBottom={'10px'}>{userData.name}</Typography>
+                                {userData.issues.length > 0 ?
+                                <DisplayIssues issues={userData.issues} editMode={editMode} selectedIssues={selectedIssues} toggleIssueSelection={toggleIssueSelection} />
+                                :
+                                <Typography variant="h5" style={{fonstSize: 'large', fontFamily: 'Poppins'}}>No issues assigned to this user yet!</Typography>
+                                }
                             </Box>
                         ))}
                         <hr></hr>
-                        <Typography variant="h6" paddingTop={'20px'}>Unassigned Issues</Typography>
+                        <Typography variant="h4" paddingTop={'20px'} paddingBottom={'10px'}>Unassigned Issues</Typography>
                         <DisplayIssues issues={unassignedIssues} editMode={editMode} selectedIssues={selectedIssues} toggleIssueSelection={toggleIssueSelection}/>
                     </Box>
                     }
-
-                        
-                        <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
-                            <ControlPointIcon cursor='pointer' style={{ fontSize: '30px', color: "var(--black-green)"}} onClick={toggleAddIssueModal} />
-                            {/*Add Issues modal*/}
-                            <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} fromIndividual={false} currentProject={currentProject} />
-                        </Box>
-
-                        {//button options when in edit mode
-                        editMode &&
-                        <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
-                            <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
-                            <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={handleDeleteIssues}>
-                                <span><DeleteIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }}/>
-                                Delete</span>
-                                </Button>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={toggleGitHubAuthModal}>
-                                <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
-                                GitHub</span>
-                                </Button>
-                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>
-                                Select All
-                                </Button>
-                            </Grid>
-                            </Grid>
-                        </Box>
-                        }
                     </>
                     :
 
@@ -290,4 +221,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default ProjectDashboard;

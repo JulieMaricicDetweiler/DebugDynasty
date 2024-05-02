@@ -10,7 +10,6 @@ import "../../colors.css";
 const AddSelf = () => {
     const [projectToken, setProjectToken] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [projectName, setProjectName] = useState('');
     const [docId, setDocId] = useState('');
     const {currentUser} = React.useContext(AuthContext);
     const { setCurrentProject } = useCurrentProject();
@@ -30,13 +29,12 @@ const AddSelf = () => {
             const userProjectsRef = collection(userRef, "projects");
             const projectSnap = await getDoc(projectRef);
             if(projectSnap.exists()) {
-                setProjectName(projectSnap.data().name);
-                const projName = projectSnap.data().name;
+                const projectName = projectSnap.data().name;
                 // Check if project exists for user
                 const userProjectsSnap = await getDoc(doc(userProjectsRef, projectToken));
                 if (!userProjectsSnap.exists()) {
                     // Add project token to the user's projects subcollection
-                    await setDoc(doc(userProjectsRef, projectToken), { projectToken, projName});
+                    await setDoc(doc(userProjectsRef, projectToken), { projectToken, projectName});
                   
                     // Fetch user data
                     const userSnap = await getDoc(userRef);
