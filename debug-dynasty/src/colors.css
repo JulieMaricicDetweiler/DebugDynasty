@@ -1,0 +1,20 @@
+:root {
+    --light-green: #1fffa9;
+    --subheading: #108610;
+    --med-green: #006900;
+    --dark-green: #155426;
+    --black-green: #09230d;
+  
+    --color-white: #6df88b;
+    --light-text: #ffffff;
+    --placeholder-text: #79927c;
+
+    --selected-accordion: #aaffaa;
+    --accordion: #b6d4b8;
+    --db-edit-buttons: #bababa;
+    --dark-text: #000000;
+    --form-button: #2da5ff;
+    --color-grey: #25794f;
+    --code-snippet-bkg: #3b3b3b;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }

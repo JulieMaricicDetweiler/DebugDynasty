@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./index.css";
-import Button from "../UI-Button/Button.js";
+import Button from "../../components/UI-Button/Button.js";
 
 const Home = () => {
     const headerBugURL = process.env.PUBLIC_URL + '/header-bug.jpg';
@@ -9,7 +9,7 @@ const Home = () => {
     const githubLogoURL = process.env.PUBLIC_URL + '/github-logo.jpg';
 
     return (
-        <section id="home" className="header-bg">
+        <div id="home" className="header-bg" style={{marginTop: '90px'}}>
             <div className="header-container" style={{
             backgroundImage: `linear-gradient(rgba(0, 50, 20, 0.8), rgba(0, 50, 20, 0.8)), url(${headerBugURL})`,
             backgroundSize: 'cover',
@@ -21,8 +21,8 @@ const Home = () => {
                 <p className="u-text-small u-text-light">At DebugDynasty, we offer a sophisticated and user-friendly platform designed to streamline the management of bug reports and user feedback for software developers. 
                     Our solution provides an automated process for efficiently tracking application issues, freeing up valuable time and resources.</p>
                 <div className="header-buttons">
-                    <Button text={"Get Started"} btnClass={"btn-dark"} href={"#"} />
-                    <Button text={"How It Works"} btnClass={"btn-green"} href={"#faq"} />
+                    <Button text={"Get Started"} btnClass={"btn-dark"} href={"/login"} />
+                    <Button text={"How It Works"} btnClass={"btn-green"} href={"/docs"} />
                 </div>
             </div>
             <div className="description-container">
@@ -61,7 +61,7 @@ const Home = () => {
             <footer>
                 &copy; Copyright. DebugDynasty Group 13 CIS4930
             </footer>
-        </section>
+        </div>
     )
 }
 

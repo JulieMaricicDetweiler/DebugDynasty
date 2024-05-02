@@ -5,53 +5,37 @@
     align-items: flex-start;*/
 }
 
-.header-container {
+.register-container {
     padding-top: 0px;
     padding-bottom: 50px;
     padding-left: 25px;
     padding-right: 25px;
 }
-.header-container h1 {
-    font-size: 4rem;
-    line-height: 1.4;
-    text-transform: uppercase;
-    color: var(--color-white);
-    position: relative;
-    padding-bottom: 2rem;
-    width: 60%;
+
+.btn-reg {
+    font-size: medium;
+    font-family: "Poppins", sans-serif;
+    background-color: #499270;
+    margin-top: 20px;
+    margin-left: 0;
+    transition: 0s;
 }
 
-.header-container h1 span {
-    margin: 3rem;
-    display: block;
-    font-size: 10rem;
+.btn-reg:hover{
+    color: black;
+    background-color: var(--light-green);
 }
 
-h1 span:nth-child(1) {
-    font-weight: 1000;
-}
-
-h1 span:nth-child(2) {
-    font-weight: 100;
-}
-
-.header-container h1::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 70%;
-    height: 1px;
-    background: var(--color-white);
-}
-
-.header-container p {
-    margin: 3rem;
-    width: 70%;
+.btn-del {
+    color: white;
+    background-color: darkgreen;
+    font-size: 10px;
+    font-family: "Poppins", sans-serif;
+    margin-top: 20px;
     margin-left: 0;
 }
 
-.btn-green, .btn-dark {
+.btn-del:hover {
     margin-top: 20px;
     margin-left: 0;
 }

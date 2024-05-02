@@ -1,35 +1,186 @@
-const Dashboard = () => {
-    return (
-        <div className="dashboard-container">
-            <h1 style={{textAlign: "center", fontFamily: "sans-serif"}}>Dashboard</h1>
-            <div className="issues-box-container">
-                 <h2 style={{textAlign: "center", fontFamily: "sans-serif"}}>Issues</h2>
-                 <div className="bug1">
-                    <div className="bug1-box1"><p>    .    </p></div>
-                    <div className="bug1-box2"><p>    .    </p></div>
-                    <div className="bug1-box3"><p>    .    </p></div>
-                 </div> <hr></hr>
-                 <div className="bug2">
-                    <div className="bug2-box1"><p>    .    </p></div>
-                    <div className="bug2-box2"><p>    .    </p></div>
-                    <div className="bug2-box3"><p>    .    </p></div>
-                 </div> <hr></hr>
-                 <div className="bug3">
-                    <div className="bug3-box1"><p>    .    </p></div>
-                    <div className="bug3-box2"><p>    .    </p></div>
-                    <div className="bug3-box3"><p>    .    </p></div>
-                 </div> <hr></hr>
-                 <button>Create</button>
-            </div>
+import * as React from 'react';
+import firebaseConfig from "../../firebase/firebaseConfig";
+import { AuthContext } from "../../components/authContext/authContext";
+import {Typography, Link, Box, Accordion, AccordionSummary, AccordionDetails, Button, Grid} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import DeleteIcon from '@mui/icons-material/Delete';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import ControlPointIcon from '@mui/icons-material/ControlPoint'; //circle to add new item
+import AddIssue from '../../components/AddIssue/AddIssue';
+import GitHubAuth from '../../components/GitHubAuth/GitHubAuth';
+import "./index.css";
+import "../../colors.css"
 
-            <div className="git-popup-container">
-                <div className="repo-name"><p> . </p></div>
-                <div className="client-id"><p> . </p></div>
-                <div className="client-server"><p> . </p></div>
-                <div className="token"></div>
-                <button>Go</button>
-                <button>Cancel</button>
-            </div>
+const Dashboard = () => {
+    const { currentUser } = React.useContext(AuthContext);
+    const [editMode, setEditMode] = React.useState(false);
+    const [selectedIssues, setSelectedIssues] = React.useState([]);
+    const [isAddIssueModalOpen, setIsAddIssueModalOpen] = React.useState(false);
+    const [isGitHubAuthModalOpen, setIsGitHubAuthModalOpen] = React.useState(false);
+
+    //temporary dummy data
+    const issues = [
+        {
+            id: "1",
+            description: "Fix layout bug on dashboard",
+            details: {
+                tags: ["bug", "UI", "high-priority"],
+                assignee: "John Doe"
+            }
+        },
+        {
+            id: "2",
+            description: "Update dependencies to latest versions",
+            details: {
+                tags: ["maintenance", "backend"],
+                assignee: "Jane Smith"
+            }
+        },
+        {
+            id: "3",
+            description: "Implement feature X according to spec",
+            details: {
+                tags: ["feature", "new"],
+                assignee: "Alice Johnson"
+            }
+        }
+    ];
+
+    const toggleEditMode = () => {
+        setEditMode(!editMode);
+        setSelectedIssues([]);
+    };
+
+    const toggleIssueSelection = (issueId) => {
+        if (selectedIssues.includes(issueId)) {
+            setSelectedIssues(selectedIssues.filter(id => id !== issueId));
+        } else {
+            setSelectedIssues([...selectedIssues, issueId]);
+        }
+    };
+
+    const toggleSelectAll = () => {
+        if (selectedIssues.length === issues.length) {
+            setSelectedIssues([]); // If all issues are already selected, clear the selection
+        } else {
+            setSelectedIssues(issues.map(issue => issue.id)); // Otherwise, select all issues
+        }
+    };
+
+    const toggleAddIssueModal = () => {
+        setIsAddIssueModalOpen(!isAddIssueModalOpen);
+    };
+
+    const toggleGitHubAuthModal = () => {
+        setIsGitHubAuthModalOpen(!isGitHubAuthModalOpen);
+    };
+
+    return (
+        <div>
+            {currentUser ?  //checks if a user is logged in
+                <Box className="dashboard-container" paddingTop='90px' maxWidth={'70%'} display={'flex'} flexDirection={'column'} margin={'auto'}>
+                    <Box className="dashboard-header" display={'flex'} flexDirection={'row'} justifyContent="space-between" paddingBottom={'50px'}>
+                        <h1 style={{ textAlign: "center", fontFamily: "Poppins", fontWeight: 'normal', color: 'var(--med-green)'}}>Issues Dashboard</h1>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <button type="button" className="editButton" onClick={toggleEditMode}>{editMode ? "Cancel" : "Edit"}</button>
+                            <EditNoteIcon  cursor='pointer' style={{ marginTop: 'auto', marginBottom: 'auto', fontSize: '60px', color: "var(--dark-green)" }} onClick={toggleEditMode}/>
+                        </div>
+                    </Box>
+
+                    { //display dashboard issues
+                    issues.map((issue) => (
+                        <Accordion key={issue.id} style={{marginBottom: '15px', backgroundColor: editMode && selectedIssues.includes(issue.id) ? 'var(--selected-accordion)' : 'var(--accordion)'}} disableGutters>
+                            <AccordionSummary
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => toggleIssueSelection(issue.id)}
+                            >
+                                <Typography style={{fontSize: 'large', fontFamily: 'Poppins'}}>
+                                    {selectedIssues.includes(issue.id) ?                                         
+                                        editMode && <CheckCircle
+                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}}
+                                    />:
+                                        editMode && <CheckCircleOutlineIcon 
+                                        style={{ marginRight: '30px', cursor: 'pointer', fontSize: '30px', verticalAlign: 'middle'}} 
+                                    />  
+                                    }
+                                    {issue.id} - {issue.description}
+                                    <ExpandMoreIcon style= {{fontSize: '25px', cursor: 'pointer', verticalAlign: 'middle'}}/>
+                                </Typography>
+                            </AccordionSummary>
+                            {!editMode && (
+                                <AccordionDetails>
+                                    <Typography variant="body2" style={{fontSize: 'large'}}>
+                                        <strong>Tags:</strong> {issue.details.tags.join(", ")}
+                                    </Typography>
+                                    <Typography variant="body2" style={{fontSize: 'large'}}>
+                                        <strong>Assignee:</strong> {issue.details.assignee}
+                                    </Typography>
+                                </AccordionDetails>
+                            )}
+                        </Accordion>
+                    ))}
+                    <Box style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px'}}>
+                        <ControlPointIcon cursor='pointer' style={{ fontSize: '30px', color: "var(--black-green)"}} onClick={toggleAddIssueModal} />
+                        {/*Add Issues modal*/}
+                        <AddIssue isOpen={isAddIssueModalOpen} onClose={toggleAddIssueModal} />
+                    </Box>
+
+                    {//button options when in edit mode
+                    editMode &&
+                    <Box style={{ width: '100%', padding: '20px 0', display: 'flex', justifyContent: 'center', paddingTop: '80px'}}>
+                        <Grid container spacing={10} justifyContent="center" style={{ maxWidth: '80%' }}>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth className="btn-nice">
+                            <span><DeleteIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }}/>
+                            Delete</span>
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth className="btn-nice" onClick={toggleGitHubAuthModal}>
+                            <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
+                            GitHub</span>
+                            </Button>
+                            <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>
+                            Select All
+                            </Button>
+                        </Grid>
+                        </Grid>
+                    </Box>
+                    }
+                </Box>
+
+            : //when user is not logged in, do not render any details, only login message
+            <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="100vh">
+                <Typography sx={{
+                    textAlign: 'center',
+                    fontSize: 'x-large'
+                }}>
+                    Oops! Looks like you're not logged in yet. Click the link below to log in.
+                </Typography>
+                <Link href="/login" sx={{
+                    textAlign: 'center',
+                    fontSize: 'x-large',
+                    textDecoration: 'none',
+                    padding: '10px 15px 10px 15px',
+                    backgroundColor: "var(--dark-green)",
+                    color: 'white',
+                    marginTop: '30px',
+                    display: 'block',
+                    borderRadius: 1
+                
+                }}>
+                    Log in
+                </Link>
+            </Box>
+            }
         </div>
     )
 }
