@@ -181,7 +181,7 @@ const Dashboard = () => {
                                 <span><GitHubIcon style={{ marginLeft: '6px', marginRight: '6px', fontSize: '24px' }} />
                                 GitHub</span>
                                 </Button>
-                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} />
+                                <GitHubAuth isOpen={isGitHubAuthModalOpen} onClose={toggleGitHubAuthModal} currentProject={currentProject} />
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <Button fullWidth className="btn-nice" onClick={toggleSelectAll}>
