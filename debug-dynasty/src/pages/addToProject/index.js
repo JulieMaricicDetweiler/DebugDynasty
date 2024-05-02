@@ -10,6 +10,7 @@ import "../../colors.css";
 const AddSelf = () => {
     const [projectToken, setProjectToken] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [projectName, setProjectName] = useState('');
     const [docId, setDocId] = useState('');
     const {currentUser} = React.useContext(AuthContext);
     const { setCurrentProject } = useCurrentProject();
@@ -23,31 +24,38 @@ const AddSelf = () => {
         event.preventDefault();
         //add project to projects firestore collection
         try {
-            const docRef = doc(firebaseConfig.firestore, "projects", projectToken);
-            // Fetch user details from the main users collection
+            const projectRef = doc(firebaseConfig.firestore, "projects", projectToken);
             const userRef = doc(firebaseConfig.firestore, "users", currentUser.uid);
-            const userSnap = await getDoc(userRef);
+            const projectUserRef = doc(projectRef, "users", currentUser.uid);
+            const userProjectsRef = collection(userRef, "projects");
+            const projectSnap = await getDoc(projectRef);
+            if(projectSnap.exists()) {
+                setProjectName(projectSnap.data().name);
 
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                const projectUsersRef = doc(docRef, "users", currentUser.uid);
-
-                // Set the user document in the project's users subcollection using the uid as the document ID
-                await setDoc(projectUsersRef, {
-                    firstName: userData.firstName,
-                    lastName: userData.lastName,
-                    email: userData.email
-                });
-
-                // Set the current project
-                // ERR: using this code results in a type error
-                // (setCurrentProject is not a function at handleSubmit)
-                setCurrentProject(projectToken);
-            } else {
-                console.log("No such user!");
+                // Check if project exists for user
+                const userProjectsSnap = await getDoc(doc(userProjectsRef, projectToken));
+                if (!userProjectsSnap.exists()) {
+                    // Add project token to the user's projects subcollection
+                    await setDoc(doc(userProjectsRef, projectToken), { projectToken, projectName });
+                  
+                    // Fetch user data
+                    const userSnap = await getDoc(userRef);
+                    if (userSnap.exists()) {
+                        // Set user data in project's user subcollection
+                        await setDoc(projectUserRef, {
+                            firstName: userSnap.data().firstName,
+                            lastName: userSnap.data().lastName,
+                            email: userSnap.data().email
+                        });
+                    } else {
+                        console.log("No such user exists!");
+                    }
+                } else {
+                    console.log("Project already added to the user");
+                }
             }
 
-            setProjectToken(''); //reset field
+            setProjectToken(''); // Reset field after processing
         } catch (error) {
             console.error("Error adding document: ", error);
         }

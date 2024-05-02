@@ -1,35 +1,47 @@
 import React, { useState } from 'react';
 import { Modal, Box, TextField, Button } from '@mui/material';
+import { AuthContext } from '../authContext/authContext';
 import firebaseConfig from '../../firebase/firebaseConfig';
-import { addDoc, collection, doc } from 'firebase/firestore';
-import { useCurrentProject } from '../ProjectContext/projectContext';
+import { doc, collection, setDoc, getDoc, getDocs, addDoc } from 'firebase/firestore';
 
-const AddIssue = ({ isOpen, onClose }) => {
-  const { currentProject } = useCurrentProject();
+
+const AddIssue = ({ isOpen, onClose, fromIndividual, currentProject }) => {
+  const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
   const [assignee, setAssignee] = useState('');
+  const {currentUser} = React.useContext(AuthContext);
 
-  const handleSubmit = () => {
-    try {
-      if (!currentProject) {
-        console.error("current project is not set.");
-        return;
-      }
-      // Add logic to submit the issue to the backend
-      const issueData = { description, tags, assignee };
-      // Add issue to the current project's issues subcollection
-      addDoc(collection(doc(firebaseConfig.firestore, 'projects/{currentProject}/users/{currentUser.uid}'), 'issues'), issueData)
-        .then(() => {
-          setDescription('');
-          setTags('');
-          setAssignee('');
-          onClose();
-        })
-    } catch (error) {
-      console.error("Error adding document: ", error);
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const year = date.getFullYear(); 
+    return `${month}-${day}-${year}`; 
+};
+
+  const handleSubmit = async () => {
+    let effectiveAssignee = assignee;
+    
+    if (fromIndividual && currentUser) {
+        effectiveAssignee = currentUser.uid;
     }
-  };
+
+    try {
+        console.log("Assignee: " + effectiveAssignee);
+        const projectUserRef = doc(firebaseConfig.firestore, `projects/${currentProject}/users`, effectiveAssignee);
+        await addDoc(collection(projectUserRef, "issues"), {
+            title: title,
+            description: description,
+            tags: tags.split(',').map(tag => tag.trim()),
+            time: formatDate(Date.now()),
+            fromUser: false,
+            status: 'Open'
+        });
+    } catch (error) {
+        console.log("Error creating issue: ", error);
+    }
+};
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -45,6 +57,26 @@ const AddIssue = ({ isOpen, onClose }) => {
         p: 4
       }}>
         <h1>Add Issue</h1>
+        <TextField
+          label="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
+            InputProps={{
+              sx: {
+                fontSize: 'small',
+                fontFamily: 'Poppins, sans-serif',
+              },
+            }}
+        />
+
         <TextField
           label="Description"
           value={description}
@@ -64,6 +96,7 @@ const AddIssue = ({ isOpen, onClose }) => {
               },
             }}
         />
+
         <TextField
           label="Tags"
           value={tags}
@@ -83,25 +116,29 @@ const AddIssue = ({ isOpen, onClose }) => {
               },
             }}
         />
-        <TextField
-          label="Assignee"
-          value={assignee}
-          onChange={(e) => setAssignee(e.target.value)}
-          fullWidth
-          margin="normal"
-          InputLabelProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
-            InputProps={{
-              sx: {
-                fontSize: 'small',
-                fontFamily: 'Poppins, sans-serif',
-              },
-            }}
-        />
+
+        {!fromIndividual &&
+          <TextField
+            label="Assignee"
+            value={assignee}
+            onChange={(e) => setAssignee(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+                sx: {
+                  fontSize: 'small',
+                  fontFamily: 'Poppins, sans-serif',
+                },
+              }}
+              InputProps={{
+                sx: {
+                  fontSize: 'small',
+                  fontFamily: 'Poppins, sans-serif',
+                },
+              }}
+          />
+        }
+
         <Button variant="contained" onClick={handleSubmit}
             style={{
               fontSize: 'small',
