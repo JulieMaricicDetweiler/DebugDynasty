@@ -51,8 +51,6 @@ const Register = () => {
             setDocId(docRef.id); // save document ID for the token message
             setOpenSnackbar(true); // open snackbar and display token
 
-            // Set the current project
-            //setCurrentProject(docRef.id);
 
             setProjectName(''); //reset field
         } catch (error) {
