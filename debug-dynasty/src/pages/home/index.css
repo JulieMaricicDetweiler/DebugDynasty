@@ -1,8 +1,6 @@
 #home {
     position: relative;
     padding-top: 0px;
-    /*display: flex;
-    align-items: flex-start;*/
 }
 
 .header-container {
@@ -24,7 +22,7 @@
 .header-container h1 span {
     margin: 3rem;
     display: block;
-    font-size: 10rem;
+    font-size: 7rem;
 }
 
 h1 span:nth-child(1) {
@@ -172,4 +170,24 @@ footer {
     text-align: center;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media screen and (max-width: 1200px) {
+    .description-container {
+        flex-direction: column;
+    }
+    .decription-container-right {
+        width: 100%;
+        height: 50vh; /* Adjust as needed */
+        min-width: 1000px;
+    }
+    .github-container {
+        flex-direction: column-reverse; /* To place the GitHub container below the description container */
+    }
+    .github-container-left {
+        width: 100%;
+        height: 50vh; /* Adjust as needed */
+        min-height: 50vh;
+        min-width: 1000px;
+    }
 }
